@@ -41,6 +41,10 @@ if (!isset($_SESSION['apriori_toko_id']) &&
         <link rel="stylesheet" href="css/templatemo-misc.css">
         <link rel="stylesheet" href="css/templatemo-style.css">
         <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+
+        <link rel="stylesheet" href="scripts/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="scripts/ionicons/css/ionicons.min.css">
+        <link rel="stylesheet" href="scripts/toast/jquery.toast.min.css">
     </head>
     <body>
         <!--[if lt IE 7]>

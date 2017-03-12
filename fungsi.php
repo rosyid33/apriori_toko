@@ -789,4 +789,9 @@ function print_cetak(){
     echo "<a href=\"javascript:window.print()\">Cetak</a>";
 }
 
+function format_date($date){
+    $date_ex = explode("/", $date);
+    return $date_ex[2]."-".$date_ex[1]."-".$date_ex[0];
+}
+
 ?>
