@@ -56,9 +56,24 @@ if(isset($_POST['submit'])){
                     // $produkIn = get_produk_to_in($temp_produk);
                     $temp_date = $value[2];
                     $produkIn = $value[3];
-                    $field_value = array("transaction_date"=>($temp_date),
-                        "produk"=>$produkIn);
-                    $query = $db_object->insert_record($table, $field_value);
+                    $item1 = explode(",", $produkIn);
+//                    $field_value = array("transaction_date"=>($temp_date),
+//                        "produk"=>$produkIn);
+//                    $query = $db_object->insert_record($table, $field_value);
+//                    INSERT INTO transaksi (transaction_date, produk)
+//                    VALUES
+//                    ('2016-06-01', 'nipple pigeon L'),
+//                    ('2016-06-01', 'nipple ninio'),
+//                    ('2016-06-01', 'mamamia L36'),
+//                    ('2016-06-01', 'sweety FP XL34')
+                    $sql = "INSERT INTO transaksi (transaction_date, produk) VALUES ";
+                    $value_in = array();
+                    foreach ($item1 as $key => $isi) {
+                        $value_in[] = "('$temp_date' , '$isi' )";
+                    }
+                    $value_to_sql_in = implode(",", $value_in);
+                    $sql .= $value_to_sql_in;
+                    $db_object->db_query($sql);
 
             //         $temp_produk = $value[3];
             //     }
