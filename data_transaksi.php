@@ -56,7 +56,9 @@ if(isset($_POST['submit'])){
                     // $produkIn = get_produk_to_in($temp_produk);
                     $temp_date = $value[2];
                     $produkIn = $value[3];
-                    $item1 = explode(",", $produkIn);
+                    //$item1 = explode(",", $produkIn);
+                    
+                    
 //                    $field_value = array("transaction_date"=>($temp_date),
 //                        "produk"=>$produkIn);
 //                    $query = $db_object->insert_record($table, $field_value);
@@ -68,11 +70,12 @@ if(isset($_POST['submit'])){
 //                    ('2016-06-01', 'sweety FP XL34')
                     $sql = "INSERT INTO transaksi (transaction_date, produk) VALUES ";
                     $value_in = array();
-                    foreach ($item1 as $key => $isi) {
-                        $value_in[] = "('$temp_date' , '$isi' )";
-                    }
-                    $value_to_sql_in = implode(",", $value_in);
-                    $sql .= $value_to_sql_in;
+                    //foreach ($item1 as $key => $isi) {
+                      //  $value_in[] = "('$temp_date' , '$isi' )";
+                    //}
+                    //$value_to_sql_in = implode(",", $value_in);
+                    //$sql .= $value_to_sql_in;
+                    $sql .= " ('$temp_date', '$produkIn')";
                     $db_object->db_query($sql);
 
             //         $temp_produk = $value[3];
@@ -85,30 +88,13 @@ if(isset($_POST['submit'])){
         <script> location.replace("?menu=data_transaksi&pesan_success=Data berhasil disimpan"); </script>
         <?php
 }
-//15 dan 28 september 2016 tidak ada data
 
-if(isset($_GET['delete'])){
-    $id_delete=$_GET['delete'];
-
-    $input_error = 0;
-    //CEK EXISTING DATA IN TABLE
-    $cek_exist = $db_object->count_data("peserta_mk",
-                            'id_dosen_mk',
-                            "id_dosen_mk='".$id_delete."'");
-    if ($cek_exist[0]>0) {
-        $input_error = 1;
-        ?>
-        <script> location.replace("?menu=perkuliahan&pesan_error=Data masih digunakan"); </script>
+if(isset($_POST['delete'])){
+    $sql = "TRUNCATE transaksi";
+    $db_object->db_query($sql);
+    ?>
+        <script> location.replace("?menu=data_transaksi&pesan_success=Data transaksi berhasil dihapus"); </script>
         <?php
-    }
-    if(!$input_error){
-        //delete
-        $sql_del = "DELETE FROM dosen_mk WHERE id_dosen_mk = '$id_delete'";
-        $tr=$db_object->db_query($sql_del);
-        ?>
-        <script> location.replace("?menu=perkuliahan&pesan_success=berhasil delete data"); </script>
-        <?php
-    }
 }
 
 $sql = "SELECT
@@ -132,6 +118,11 @@ $jumlah=$db_object->db_num_rows($query);
                 </div>
                 <div class="form-group">
                     <input name="submit" type="submit" value="Create" class="btn btn-success">
+                </div>
+                <div class="form-group">
+                    <button name="delete" type="submit"  class="btn btn-danger" >
+                        <i class="fa fa-trash-o"></i> Delete
+                    </button>
                 </div>
             </form>
 

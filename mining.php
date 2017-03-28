@@ -30,7 +30,7 @@ function is_exist_variasi_itemset($array_item1, $array_item2, $item1, $item2) {
 }
 
 
-function mining_process($db_object, $min_support=20, $min_confidence=85){
+function mining_process($db_object, $min_support, $min_confidence){
     reset_temporary($db_object);
     $sql = "SELECT transaction_date FROM transaksi GROUP BY transaction_date";
     $query=$db_object->db_query($sql);
@@ -163,6 +163,74 @@ function mining_process($db_object, $min_support=20, $min_confidence=85){
         }
         $a++;
     }
+
+
+    //hitung confidence
+    $confidence_from_itemset = 0;
+    //dari itemset 3 jika tidak ada yg lolos ambil dari itemset 2 jika tiak ada gagal mendapatkan confidence
+    $sql_3 = "SELECT * FROM itemset3 WHERE lolos = 1 ";
+    $res_3 = $db_object->db_query($sql_3);
+    $jumlah_itemset3_lolos = $db_object->db_num_rows($res_3);
+    if($jumlah_itemset3_lolos > 0){
+        $confidence_from_itemset = 3;
+        
+        while($row_3 = $db_object->db_fetch_array($res_3)){
+            $atribut1 = $row_3['atribut1'];
+            $atribut2 = $row_3['atribut2'];
+            $atribut3 = $row_3['atribut3'];
+            $supp_xuy = $row_3['support'];
+            
+            //1,2 => 3
+            hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
+                    $atribut1, $atribut2, $atribut3);
+            
+            //1,3 => 2
+            hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
+                    $atribut1, $atribut3, $atribut2);
+            
+            //2,3 => 1
+            hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
+                    $atribut1, $atribut3, $atribut2);
+            
+            //1 => 2,3
+            hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence, 
+                    $atribut1, $atribut2, $atribut3);
+            
+            //2 => 1,3
+            hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
+                    $atribut2, $atribut1, $atribut3);
+            
+            //3 => 1,2
+            hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
+                    $atribut3, $atribut1, $atribut2);
+            
+        }
+    }
+
+    //dari itemset 2
+    $sql_2 = "SELECT * FROM itemset2 WHERE lolos = 1 ";
+    $res_2 = $db_object->db_query($sql_2);
+    $jumlah_itemset2_lolos = $db_object->db_num_rows($res_2);
+    if($jumlah_itemset2_lolos > 0){
+        $confidence_from_itemset = 2;
+        while($row_2 = $db_object->db_fetch_array($res_2)){
+            $atribut1 = $row_2['atribut1'];
+            $atribut2 = $row_2['atribut2'];
+            $supp_xuy = $row_2['support'];
+            
+            //1 => 2
+            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut1, $atribut2);
+            
+            //2 => 1
+            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut2, $atribut1);
+        }
+    }
+
+    if($confidence_from_itemset==0){
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -285,4 +353,108 @@ function get_count_itemset3($db_object, $atribut1, $atribut2, $atribut3) {
     $result = $db_object->db_query($sql);
     $jml = $db_object->db_num_rows($result);
     return $jml;
+}
+
+
+/**
+ * kombinasi atibut1 U atribut2 => $atribut3
+ * save to table confidence
+ * @param type $db_object
+ * @param type $supp_xuy
+ * @param type $atribut1
+ * @param type $atribut2
+ * @param type $atribut3
+ */
+function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
+        $atribut1, $atribut2, $atribut3){
+    
+    $sql1_ = "SELECT support FROM itemset2 "
+            . " WHERE atribut1 = '".$atribut1."' "
+            . " AND atribut2 = '".$atribut2."' ";
+    $res1_ = $db_object->db_query($sql1_);
+    while($row1_ = $db_object->db_fetch($res1_)){
+        $kombinasi1 = $atribut1." , ".$atribut2;
+        $kombinasi2 = $atribut3;
+        $supp_x = $row1_['support'];
+        $conf = ($supp_xuy/$supp_x)*100;
+        //lolos seleksi min confidence itemset3
+        $lolos = ($conf >= $min_confidence)? 1:0;
+        //masukkan ke table confidence
+        $db_object->insert_record("confidence", 
+                array("kombinasi1" => $kombinasi1,
+                    "kombinasi2" => $kombinasi2,
+                    "support_xUy" => $supp_xuy,
+                    "support_x" => $supp_x,
+                    "confidence" => $conf,
+                    "lolos" => $lolos,
+                    "min_support" => $min_support,
+                    "min_confidence" => $min_confidence
+                ));
+    }
+}
+
+
+/**
+ * confidence atribut1 => atribut2 U atribut3
+ * @param type $db_object
+ * @param type $supp_xuy
+ * @param type $min_support
+ * @param type $min_confidence
+ * @param type $atribut1
+ * @param type $atribut2
+ * @param type $atribut3
+ */
+function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
+        $atribut1, $atribut2, $atribut3){
+    
+        $sql4_ = "SELECT support FROM itemset1 "
+                . " WHERE atribut = '".$atribut1."' ";
+        $res4_ = $db_object->db_query($sql4_);
+        while($row4_ = $db_object->db_fetch($res4_)){
+            $kombinasi1 = $atribut1;
+            $kombinasi2 = $atribut2." , ".$atribut3;
+            $supp_x = $row4_['support'];
+            $conf = ($supp_xuy/$supp_x)*100;
+            //lolos seleksi min confidence itemset3
+            $lolos = ($conf >= $min_confidence)? 1:0;
+            //masukkan ke table confidence
+            $db_object->insert_record("confidence", 
+                    array("kombinasi1" => $kombinasi1,
+                        "kombinasi2" => $kombinasi2,
+                        "support_xUy" => $supp_xuy,
+                        "support_x" => $supp_x,
+                        "confidence" => $conf,
+                        "lolos" => $lolos,
+                        "min_support" => $min_support,
+                        "min_confidence" => $min_confidence
+                    ));
+        }
+}
+
+
+function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence,
+        $atribut1, $atribut2){
+    
+        $sql1_ = "SELECT support FROM itemset1 "
+                    . " WHERE atribut = '".$atribut1."' ";
+        $res1_ = $db_object->db_query($sql1_);
+        while($row1_ = $db_object->db_fetch_array($res1_)){
+            $kombinasi1 = $atribut1;
+            $kombinasi2 = $atribut2;
+            $supp_x = $row1_['support'];
+            $conf = ($supp_xuy/$supp_x)*100;
+            //lolos seleksi min confidence itemset3
+            $lolos = ($conf >= $min_confidence)? 1:0;
+            //masukkan ke table confidence
+            $db_object->insert_record("confidence", 
+                    array("kombinasi1" => $kombinasi1,
+                        "kombinasi2" => $kombinasi2,
+                        "support_xUy" => $supp_xuy,
+                        "support_x" => $supp_x,
+                        "confidence" => $conf,
+                        "lolos" => $lolos,
+                        "min_support" => $min_support,
+                        "min_confidence" => $min_confidence
+                    ));
+        }
 }
