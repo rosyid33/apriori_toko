@@ -28,18 +28,11 @@ CREATE TABLE `confidence` (
   `confidence` double DEFAULT NULL,
   `lolos` tinyint(4) DEFAULT NULL,
   `min_support` double DEFAULT NULL,
-  `min_confidence` double DEFAULT NULL
+  `min_confidence` double DEFAULT NULL,
+  `id_process` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*Data for the table `confidence` */
-
-insert  into `confidence`(`kombinasi1`,`kombinasi2`,`support_xUy`,`support_x`,`confidence`,`lolos`,`min_support`,`min_confidence`) values 
-('bendera cair coklat kotak','mpoko pant standart L30',20,25,80,0,20,85),
-('mpoko pant standart L30','bendera cair coklat kotak',20,35,57.142857142857,0,20,85),
-('cusson hair lotion','sweety FP XL34',25,30,83.333333333333,0,20,85),
-('sweety FP XL34','cusson hair lotion',25,25,100,1,20,85),
-('happy nappy pant M20','sgm soya 3 van 400',25,25,100,1,20,85),
-('sgm soya 3 van 400','happy nappy pant M20',25,25,100,1,20,85);
 
 /*Table structure for table `itemset1` */
 
@@ -49,111 +42,11 @@ CREATE TABLE `itemset1` (
   `atribut` varchar(200) DEFAULT NULL,
   `jumlah` int(11) DEFAULT NULL,
   `support` double DEFAULT NULL,
-  `lolos` tinyint(4) DEFAULT NULL
+  `lolos` tinyint(4) DEFAULT NULL,
+  `id_process` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `itemset1` */
-
-insert  into `itemset1`(`atribut`,`jumlah`,`support`,`lolos`) values 
-('bebelac 3 md 400',4,20,1),
-('bebelove 1 800',1,5,0),
-('bendera cair coklat botol',4,20,1),
-('bendera cair coklat kotak',5,25,1),
-('bendera cair straw botol',3,15,0),
-('bendera cair straw kotak',2,10,0),
-('bendera jelajah van 800',1,5,0),
-('biscuit KH',1,5,0),
-('cd cewek',2,10,0),
-('cerelac BM',1,5,0),
-('chilkid reg van 800',3,15,0),
-('chilschool van 800',2,10,0),
-('cusson hair lotion',6,30,1),
-('cussons baby powder',2,10,0),
-('cussons shampoo alomnd',2,10,0),
-('cutton buds huki',1,5,0),
-('dancow 3 plus md 800',1,5,0),
-('dancow batita van 500',2,10,0),
-('dot huki',1,5,0),
-('dot huki 250',3,15,0),
-('DR p basic L8',1,5,0),
-('fluffy L16',1,5,0),
-('happy nappy L20',1,5,0),
-('happy nappy M20',2,10,0),
-('happy nappy M8',1,5,0),
-('happy nappy pant M20',5,25,1),
-('happy nappy pant XL20',1,5,0),
-('happy nappy XL20',1,5,0),
-('huki niple L',3,15,0),
-('JB cologne fresh blossoms 300',2,10,0),
-('JB cologne happy berries 125',2,10,0),
-('kaos kaki ideal',3,15,0),
-('lactogen 1 350',1,5,0),
-('lactogen 1 750',1,5,0),
-('mamamia L36',1,5,0),
-('merries M34',1,5,0),
-('merries XL26',2,10,0),
-('milna bubur ayam wortel',1,5,0),
-('milna bubur pisang',1,5,0),
-('minyak telon lang 100',1,5,0),
-('minyak telon lang 30',1,5,0),
-('mitu tissue basah',3,15,0),
-('MKP caplang 120',1,5,0),
-('mpoko pant standart L20',1,5,0),
-('mpoko pant standart L30',7,35,1),
-('mpoko pant standart L36',1,5,0),
-('mpoko pant standart M20',1,5,0),
-('mpoko pant standart XL20',1,5,0),
-('mpoko pant standart XXL18',1,5,0),
-('mpoko pant standart XXL24',1,5,0),
-('mpoko xtradry NB52',1,5,0),
-('mpoko xtradry XL34',1,5,0),
-('mpoko xtradry XXL28',2,10,0),
-('mpoko xtrasoft boy XL24',1,5,0),
-('mpoko xtrasoft girl XL24',1,5,0),
-('mpoko xtrasoft XXL20',1,5,0),
-('niple pigeon L',3,15,0),
-('nipple ninio',2,10,0),
-('nutrillon 4 van 400',1,5,0),
-('nutrillon ryl 4 van 800',1,5,0),
-('nutrillon soya 2 400',1,5,0),
-('nutrillon soya 3 van 800',2,10,0),
-('nutrillon soya 4 van 400',1,5,0),
-('nutrilon 4 van 800',1,5,0),
-('nutrlon 3 van 800',1,5,0),
-('pampers AB XL34',1,5,0),
-('pampers eko pant M20',1,5,0),
-('popoku L20',1,5,0),
-('popoku L40',1,5,0),
-('popoku pant XL20',4,20,1),
-('popoku S20',1,5,0),
-('promina daging brokoli',1,5,0),
-('sgm 1 plus  md 900',2,10,0),
-('sgm 1 plus md 400',1,5,0),
-('sgm 1 plus van 150',4,20,1),
-('sgm 1 plus van 900',1,5,0),
-('sgm 3 plus md 400',1,5,0),
-('sgm 3 plus md 900',3,15,0),
-('sgm 3 plus van 400',3,15,0),
-('sgm 3 plus van 900',1,5,0),
-('sgm ananda 1 400',2,10,0),
-('sgm soya 2 200',1,5,0),
-('sgm soya 3 van 400',5,25,1),
-('sgm soya 4 400',4,20,1),
-('sleek refil',2,10,0),
-('sweety FP L36',2,10,0),
-('sweety FP M38',1,5,0),
-('sweety FP S10',1,5,0),
-('sweety FP XL20',2,10,0),
-('sweety FP XL34',5,25,1),
-('sweety FP XXL20',1,5,0),
-('sweety sns S12',1,5,0),
-('sweety sns S27',1,5,0),
-('tempat makan pang-pang',1,5,0),
-('underpad',1,5,0),
-('zwitsal baby bath MH 200',1,5,0),
-('zwitsal hair lotion 200',1,5,0),
-('zwitsal shampoo 300',2,10,0),
-('zwitsal shampoo AVKS 100',1,5,0);
 
 /*Table structure for table `itemset2` */
 
@@ -164,67 +57,11 @@ CREATE TABLE `itemset2` (
   `atribut2` varchar(200) DEFAULT NULL,
   `jumlah` int(11) DEFAULT NULL,
   `support` double DEFAULT NULL,
-  `lolos` tinyint(4) DEFAULT NULL
+  `lolos` tinyint(4) DEFAULT NULL,
+  `id_process` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `itemset2` */
-
-insert  into `itemset2`(`atribut1`,`atribut2`,`jumlah`,`support`,`lolos`) values 
-('bebelac 3 md 400','bendera cair coklat botol',0,0,0),
-('bebelac 3 md 400','bendera cair coklat kotak',1,5,0),
-('bebelac 3 md 400','cusson hair lotion',0,0,0),
-('bebelac 3 md 400','happy nappy pant M20',1,5,0),
-('bebelac 3 md 400','mpoko pant standart L30',2,10,0),
-('bebelac 3 md 400','popoku pant XL20',1,5,0),
-('bebelac 3 md 400','sgm 1 plus van 150',2,10,0),
-('bebelac 3 md 400','sgm soya 3 van 400',1,5,0),
-('bebelac 3 md 400','sgm soya 4 400',2,10,0),
-('bebelac 3 md 400','sweety FP XL34',0,0,0),
-('bendera cair coklat botol','bendera cair coklat kotak',2,10,0),
-('bendera cair coklat botol','cusson hair lotion',2,10,0),
-('bendera cair coklat botol','happy nappy pant M20',1,5,0),
-('bendera cair coklat botol','mpoko pant standart L30',2,10,0),
-('bendera cair coklat botol','popoku pant XL20',0,0,0),
-('bendera cair coklat botol','sgm 1 plus van 150',0,0,0),
-('bendera cair coklat botol','sgm soya 3 van 400',1,5,0),
-('bendera cair coklat botol','sgm soya 4 400',0,0,0),
-('bendera cair coklat botol','sweety FP XL34',2,10,0),
-('bendera cair coklat kotak','cusson hair lotion',3,15,0),
-('bendera cair coklat kotak','happy nappy pant M20',1,5,0),
-('bendera cair coklat kotak','mpoko pant standart L30',4,20,1),
-('bendera cair coklat kotak','popoku pant XL20',1,5,0),
-('bendera cair coklat kotak','sgm 1 plus van 150',2,10,0),
-('bendera cair coklat kotak','sgm soya 3 van 400',1,5,0),
-('bendera cair coklat kotak','sgm soya 4 400',2,10,0),
-('bendera cair coklat kotak','sweety FP XL34',3,15,0),
-('cusson hair lotion','happy nappy pant M20',0,0,0),
-('cusson hair lotion','mpoko pant standart L30',2,10,0),
-('cusson hair lotion','popoku pant XL20',1,5,0),
-('cusson hair lotion','sgm 1 plus van 150',1,5,0),
-('cusson hair lotion','sgm soya 3 van 400',0,0,0),
-('cusson hair lotion','sgm soya 4 400',1,5,0),
-('cusson hair lotion','sweety FP XL34',5,25,1),
-('happy nappy pant M20','mpoko pant standart L30',2,10,0),
-('happy nappy pant M20','popoku pant XL20',0,0,0),
-('happy nappy pant M20','sgm 1 plus van 150',2,10,0),
-('happy nappy pant M20','sgm soya 3 van 400',5,25,1),
-('happy nappy pant M20','sgm soya 4 400',2,10,0),
-('happy nappy pant M20','sweety FP XL34',0,0,0),
-('mpoko pant standart L30','popoku pant XL20',2,10,0),
-('mpoko pant standart L30','sgm 1 plus van 150',3,15,0),
-('mpoko pant standart L30','sgm soya 3 van 400',2,10,0),
-('mpoko pant standart L30','sgm soya 4 400',3,15,0),
-('mpoko pant standart L30','sweety FP XL34',2,10,0),
-('popoku pant XL20','sgm 1 plus van 150',1,5,0),
-('popoku pant XL20','sgm soya 3 van 400',0,0,0),
-('popoku pant XL20','sgm soya 4 400',2,10,0),
-('popoku pant XL20','sweety FP XL34',1,5,0),
-('sgm 1 plus van 150','sgm soya 3 van 400',2,10,0),
-('sgm 1 plus van 150','sgm soya 4 400',3,15,0),
-('sgm 1 plus van 150','sweety FP XL34',0,0,0),
-('sgm soya 3 van 400','sgm soya 4 400',2,10,0),
-('sgm soya 3 van 400','sweety FP XL34',0,0,0),
-('sgm soya 4 400','sweety FP XL34',1,5,0);
 
 /*Table structure for table `itemset3` */
 
@@ -236,24 +73,26 @@ CREATE TABLE `itemset3` (
   `atribut3` varchar(200) DEFAULT NULL,
   `jumlah` int(11) DEFAULT NULL,
   `support` double DEFAULT NULL,
-  `lolos` tinyint(4) DEFAULT NULL
+  `lolos` tinyint(4) DEFAULT NULL,
+  `id_process` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `itemset3` */
 
-insert  into `itemset3`(`atribut1`,`atribut2`,`atribut3`,`jumlah`,`support`,`lolos`) values 
-('bendera cair coklat kotak','cusson hair lotion','mpoko pant standart L30',2,10,0),
-('bendera cair coklat kotak','cusson hair lotion','sweety FP XL34',3,15,0),
-('bendera cair coklat kotak','mpoko pant standart L30','sweety FP XL34',2,10,0),
-('cusson hair lotion','mpoko pant standart L30','sweety FP XL34',2,10,0),
-('bendera cair coklat kotak','happy nappy pant M20','mpoko pant standart L30',1,5,0),
-('bendera cair coklat kotak','happy nappy pant M20','sgm soya 3 van 400',1,5,0),
-('bendera cair coklat kotak','mpoko pant standart L30','sgm soya 3 van 400',1,5,0),
-('happy nappy pant M20','mpoko pant standart L30','sgm soya 3 van 400',2,10,0),
-('cusson hair lotion','happy nappy pant M20','sweety FP XL34',0,0,0),
-('cusson hair lotion','happy nappy pant M20','sgm soya 3 van 400',0,0,0),
-('cusson hair lotion','sweety FP XL34','sgm soya 3 van 400',0,0,0),
-('happy nappy pant M20','sweety FP XL34','sgm soya 3 van 400',0,0,0);
+/*Table structure for table `process_log` */
+
+DROP TABLE IF EXISTS `process_log`;
+
+CREATE TABLE `process_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `min_support` double DEFAULT NULL,
+  `min_confidence` double DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `process_log` */
 
 /*Table structure for table `transaksi` */
 
@@ -462,7 +301,7 @@ CREATE TABLE `users` (
   `last_login` datetime DEFAULT NULL,
   `inactive` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `users` */
 
