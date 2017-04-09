@@ -30,9 +30,13 @@ function is_exist_variasi_itemset($array_item1, $array_item2, $item1, $item2) {
 }
 
 
-function mining_process($db_object, $min_support, $min_confidence){
-    reset_temporary($db_object);
-    $sql = "SELECT transaction_date FROM transaksi GROUP BY transaction_date";
+function mining_process($db_object, $min_support, $min_confidence, $start_date, $end_date, $id_process){
+    //remove reset truncate (change to log mode)
+    //reset_temporary($db_object);
+    
+    $sql = "SELECT transaction_date FROM transaksi "
+            . " WHERE  transaction_date BETWEEN '$start_date' AND '$end_date' "
+            . " GROUP BY transaction_date";
     $query=$db_object->db_query($sql);
     $jumlah_transaksi=$db_object->db_num_rows($query);
     
@@ -44,9 +48,20 @@ function mining_process($db_object, $min_support, $min_confidence){
           FROM
             transaksi
           WHERE produk != ''
+          AND transaction_date BETWEEN '$start_date' AND '$end_date' 
           GROUP BY produk";
     $query1=$db_object->db_query($sql1);
     $itemset1 = array();
+    echo "<strong>Itemset 1:</strong>
+            <table class = 'table table-bordered table-striped  table-hover'>
+            <tr>
+            <th>No</th>
+            <th>Item</th>
+            <th>Jumlah</th>
+            <th>Support</th>
+            <th></th>
+            </tr>";
+    $no = 1;
     while($row = $db_object->db_fetch_array($query1)){
         $produk = $row['produk'];
         $jml = $row['jml'];
@@ -56,19 +71,40 @@ function mining_process($db_object, $min_support, $min_confidence){
                         "atribut"=>($produk),
                         "jumlah"=>$jml,
                         "support"=>$support,
-                        "lolos"=>$lolos
+                        "lolos"=>$lolos,
+                        "id_process"=>$id_process
                     );
         $query = $db_object->insert_record("itemset1", $field_value);
         
         if($lolos){
             $itemset1[] = $produk;
         }
+        echo "<tr>";
+        echo "<td>" . $no . "</td>";
+        echo "<td>" . $produk . "</td>";
+        echo "<td>" . $jml . "</td>";
+        echo "<td>" . price_format($support) . "</td>";
+        echo "<td>" . ($lolos == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+        echo "</tr>";
+        $no++;
     }
+    echo "</table>";
     
     //build itemset2
     $a = 0;
     $NilaiAtribut1 = $NilaiAtribut2 = array();
     $itemset2_var1 = $itemset2_var2 = array();
+    echo "<strong>Itemset 2:</strong>
+            <table class='table table-bordered table-striped  table-hover'>
+                <tr>
+                    <th>No</th>
+                    <th>Item 1</th>
+                    <th>Item 2</th>
+                    <th>Jumlah</th>
+                    <th>Support</th>
+                    <th></th>
+                </tr>";
+    $no=1;
     while ($a <= count($itemset1)) {
         $b = 0;
         while ($b <= count($itemset1)) {
@@ -77,7 +113,7 @@ function mining_process($db_object, $min_support, $min_confidence){
             if (!empty($variance1) && !empty($variance2)) {
                 if ($variance1 != $variance2) {
                     if(!is_exist_variasi_itemset($NilaiAtribut1, $NilaiAtribut2, $variance1, $variance2)) {
-                        $jml_itemset2 = get_count_itemset2($db_object, $variance1, $variance2);
+                        $jml_itemset2 = get_count_itemset2($db_object, $variance1, $variance2, $start_date, $end_date);
                         $NilaiAtribut1[] = $variance1;
                         $NilaiAtribut2[] = $variance2;
 
@@ -89,13 +125,24 @@ function mining_process($db_object, $min_support, $min_confidence){
                                 "atribut2" => $variance2,
                                 "jumlah" => $jml_itemset2,
                                 "support" => $support2,
-                                "lolos" => $lolos
+                                "lolos" => $lolos,
+                                "id_process"=>$id_process
                         ));     
                         
                         if($lolos){
                             $itemset2_var1[] = $variance1;
                             $itemset2_var2[] = $variance2;
                         }
+                        
+                        echo "<tr>";
+                        echo "<td>" . $no . "</td>";
+                        echo "<td>" . $variance1 . "</td>";
+                        echo "<td>" . $variance2 . "</td>";
+                        echo "<td>" . $jml_itemset2 . "</td>";
+                        echo "<td>" . price_format($support2) . "</td>";
+                        echo "<td>" . ($lolos == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+                        echo "</tr>";
+                        $no++;
                     }
                 }
             }
@@ -103,10 +150,23 @@ function mining_process($db_object, $min_support, $min_confidence){
         }
         $a++;
     }
+    echo "</table>";
     
     //build itemset3
     $a = 0;
     $tigaVariasiItem = array();
+    echo "<strong>Itemset 3:</strong>
+    <table class='table table-bordered table-striped  table-hover'>
+        <tr>
+            <th>No</th>
+            <th>Item 1</th>
+            <th>Item 2</th>
+            <th>Item 3</th>
+            <th>Jumlah</th>
+            <th>Support</th>
+            <th></th>
+        </tr>";
+    $no=1;
     while ($a <= count($itemset2_var1)) {
         $b = 0;
         while ($b <= count($itemset2_var1)) {
@@ -143,7 +203,7 @@ function mining_process($db_object, $min_support, $min_confidence){
                             }
                             
                             //jumlah item set3 dan menghitung supportnya
-                            $jml_itemset3 = get_count_itemset3($db_object, $itemset1, $itemset2, $itemset3);
+                            $jml_itemset3 = get_count_itemset3($db_object, $itemset1, $itemset2, $itemset3, $start_date, $end_date);
                             $support3 = ($jml_itemset3/$jumlah_transaksi) * 100;
                             $lolos = ($support3 >= $min_support)? 1:0;
                             //masukkan ke table itemset3
@@ -152,8 +212,20 @@ function mining_process($db_object, $min_support, $min_confidence){
                                 "atribut3" => $itemset3,
                                 "jumlah" => $jml_itemset3,
                                 "support" => $support3,
-                                "lolos" => $lolos
+                                "lolos" => $lolos,
+                                "id_process" => $id_process
                             ));
+                            
+                            echo "<tr>";
+                            echo "<td>" . $no . "</td>";
+                            echo "<td>" . $itemset1. "</td>";
+                            echo "<td>" . $itemset2 . "</td>";
+                            echo "<td>" . $itemset3 . "</td>";
+                            echo "<td>" . $jml_itemset3 . "</td>";
+                            echo "<td>" . price_format($support3) . "</td>";
+                            echo "<td>" . ($lolos == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+                            echo "</tr>";
+                            $no++;
                         }
                     }
                     
@@ -163,12 +235,13 @@ function mining_process($db_object, $min_support, $min_confidence){
         }
         $a++;
     }
+    echo "</table>";
 
 
     //hitung confidence
     $confidence_from_itemset = 0;
     //dari itemset 3 jika tidak ada yg lolos ambil dari itemset 2 jika tiak ada gagal mendapatkan confidence
-    $sql_3 = "SELECT * FROM itemset3 WHERE lolos = 1 ";
+    $sql_3 = "SELECT * FROM itemset3 WHERE lolos = 1 AND id_process = ".$id_process;
     $res_3 = $db_object->db_query($sql_3);
     $jumlah_itemset3_lolos = $db_object->db_num_rows($res_3);
     if($jumlah_itemset3_lolos > 0){
@@ -182,33 +255,33 @@ function mining_process($db_object, $min_support, $min_confidence){
             
             //1,2 => 3
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut2, $atribut3);
+                    $atribut1, $atribut2, $atribut3, $id_process);
             
             //1,3 => 2
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut3, $atribut2);
+                    $atribut1, $atribut3, $atribut2, $id_process);
             
             //2,3 => 1
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut3, $atribut2);
+                    $atribut1, $atribut3, $atribut2, $id_process);
             
             //1 => 2,3
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut2, $atribut3);
+                    $atribut1, $atribut2, $atribut3, $id_process);
             
             //2 => 1,3
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-                    $atribut2, $atribut1, $atribut3);
+                    $atribut2, $atribut1, $atribut3, $id_process);
             
             //3 => 1,2
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-                    $atribut3, $atribut1, $atribut2);
+                    $atribut3, $atribut1, $atribut2, $id_process);
             
         }
     }
 
     //dari itemset 2
-    $sql_2 = "SELECT * FROM itemset2 WHERE lolos = 1 ";
+    $sql_2 = "SELECT * FROM itemset2 WHERE lolos = 1 AND id_process = ".$id_process;
     $res_2 = $db_object->db_query($sql_2);
     $jumlah_itemset2_lolos = $db_object->db_num_rows($res_2);
     if($jumlah_itemset2_lolos > 0){
@@ -219,10 +292,10 @@ function mining_process($db_object, $min_support, $min_confidence){
             $supp_xuy = $row_2['support'];
             
             //1 => 2
-            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut1, $atribut2);
+            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut1, $atribut2, $id_process);
             
             //2 => 1
-            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut2, $atribut1);
+            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut2, $atribut1, $id_process);
         }
     }
 
@@ -334,10 +407,11 @@ function is_exist_variasi_on_itemset3($array, $tiga_variasi){
 }
 
 
-function get_count_itemset2($db_object, $atribut1, $atribut2) {
+function get_count_itemset2($db_object, $atribut1, $atribut2, $start_date, $end_date) {
     $sql = "SELECT COUNT(transaction_date) AS jml, transaction_date 
             FROM transaksi 
             WHERE (produk='$atribut1' OR produk = '$atribut2') 
+                AND transaction_date BETWEEN '$start_date' AND '$end_date' 
             GROUP BY transaction_date
             HAVING COUNT(transaction_date)=2";
     $result = $db_object->db_query($sql);
@@ -345,9 +419,10 @@ function get_count_itemset2($db_object, $atribut1, $atribut2) {
     return $jml;
 }
 
-function get_count_itemset3($db_object, $atribut1, $atribut2, $atribut3) {
+function get_count_itemset3($db_object, $atribut1, $atribut2, $atribut3, $start_date, $end_date) {
     $sql = "SELECT COUNT(transaction_date) AS jml, transaction_date FROM transaksi 
             WHERE (produk='$atribut1' OR produk = '$atribut2'  OR produk = '$atribut3') 
+                AND transaction_date BETWEEN '$start_date' AND '$end_date' 
             GROUP BY transaction_date
             HAVING COUNT(transaction_date)=3";
     $result = $db_object->db_query($sql);
@@ -366,11 +441,12 @@ function get_count_itemset3($db_object, $atribut1, $atribut2, $atribut3) {
  * @param type $atribut3
  */
 function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
-        $atribut1, $atribut2, $atribut3){
+        $atribut1, $atribut2, $atribut3, $id_process){
     
     $sql1_ = "SELECT support FROM itemset2 "
             . " WHERE atribut1 = '".$atribut1."' "
-            . " AND atribut2 = '".$atribut2."' ";
+            . " AND atribut2 = '".$atribut2."' "
+            . " AND id_process = ".$id_process;
     $res1_ = $db_object->db_query($sql1_);
     while($row1_ = $db_object->db_fetch($res1_)){
         $kombinasi1 = $atribut1." , ".$atribut2;
@@ -388,7 +464,8 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
                     "confidence" => $conf,
                     "lolos" => $lolos,
                     "min_support" => $min_support,
-                    "min_confidence" => $min_confidence
+                    "min_confidence" => $min_confidence,
+                    "id_process" => $id_process
                 ));
     }
 }
@@ -405,10 +482,11 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
  * @param type $atribut3
  */
 function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-        $atribut1, $atribut2, $atribut3){
+        $atribut1, $atribut2, $atribut3, $id_process){
     
         $sql4_ = "SELECT support FROM itemset1 "
-                . " WHERE atribut = '".$atribut1."' ";
+                . " WHERE atribut = '".$atribut1."' "
+                . " AND id_process = ".$id_process;
         $res4_ = $db_object->db_query($sql4_);
         while($row4_ = $db_object->db_fetch($res4_)){
             $kombinasi1 = $atribut1;
@@ -426,17 +504,18 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
                         "confidence" => $conf,
                         "lolos" => $lolos,
                         "min_support" => $min_support,
-                        "min_confidence" => $min_confidence
+                        "min_confidence" => $min_confidence,
+                        "id_process" => $id_process
                     ));
         }
 }
 
 
 function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence,
-        $atribut1, $atribut2){
+        $atribut1, $atribut2, $id_process){
     
         $sql1_ = "SELECT support FROM itemset1 "
-                    . " WHERE atribut = '".$atribut1."' ";
+                    . " WHERE atribut = '".$atribut1."' AND id_process = ".$id_process;
         $res1_ = $db_object->db_query($sql1_);
         while($row1_ = $db_object->db_fetch_array($res1_)){
             $kombinasi1 = $atribut1;
@@ -454,7 +533,8 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
                         "confidence" => $conf,
                         "lolos" => $lolos,
                         "min_support" => $min_support,
-                        "min_confidence" => $min_confidence
+                        "min_confidence" => $min_confidence,
+                        "id_process" => $id_process
                     ));
         }
 }

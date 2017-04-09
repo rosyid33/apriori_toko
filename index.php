@@ -38,14 +38,17 @@ if (!isset($_SESSION['apriori_toko_id']) &&
         -->
         <link rel="stylesheet" href="css/bootstrap.css">
         <link rel="stylesheet" href="css/font-awesome.css">
-        <link rel="stylesheet" href="css/animate.css">
-        <link rel="stylesheet" href="css/templatemo-misc.css">
+        <!--<link rel="stylesheet" href="css/animate.css">-->
+        <!--<link rel="stylesheet" href="css/templatemo-misc.css">-->
         <link rel="stylesheet" href="css/templatemo-style.css">
-        <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+        <!--<script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>-->
 
         <link rel="stylesheet" href="scripts/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="scripts/ionicons/css/ionicons.min.css">
-        <link rel="stylesheet" href="scripts/toast/jquery.toast.min.css">
+        <!--<link rel="stylesheet" href="scripts/toast/jquery.toast.min.css">-->
+
+        <!-- daterange picker -->
+        <link rel="stylesheet" href="import/daterangepicker/daterangepicker-bs3.css">
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -84,6 +87,8 @@ if (!isset($_SESSION['apriori_toko_id']) &&
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 
+
+
         <!-- Preloader -->
         <script type="text/javascript">
             //<![CDATA[
@@ -94,6 +99,41 @@ if (!isset($_SESSION['apriori_toko_id']) &&
             })
             //]]>
         </script>
+
+
+<!-- jQuery 2.1.4 -->
+    <!-- <script src="import/jQuery/jQuery-2.1.4.min.js"></script> -->
+        <!-- date-range-picker -->
+    <script src="import/daterangepicker/moment-cloud.min.js"></script>
+    <script src="import/daterangepicker/daterangepicker.js"></script>
+
+    <!-- Page script -->
+    <script>
+      $(function () {
+        //Date range picker
+        $('#reservation').daterangepicker(
+                {format: 'DD/MM/YYYY'}
+                );
+        $('#daterange-btn').daterangepicker(
+            {
+              ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+              },
+              startDate: moment().subtract(29, 'days'),
+              endDate: moment()
+            },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+        );
+
+      });
+    </script>
 
     </body>
 </html>

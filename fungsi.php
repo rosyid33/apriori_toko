@@ -779,7 +779,7 @@ function link_text($link, $label, $params='')
  * @return type
  */
 function price_format($value){
-	return number_format($value,3, ',', '.');
+	return number_format($value,2, ',', '.');
 }
 
 /**
