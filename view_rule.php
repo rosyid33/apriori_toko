@@ -36,11 +36,12 @@ if(isset($_GET['id_process'])){
     $id_process = $_GET['id_process'];
 }
 $sql = "SELECT
-        *
+        conf.*, log.start_date, log.end_date
         FROM
-         confidence 
-        WHERE id_process = '$id_process' "
-        . " ORDER BY lolos DESC";
+         confidence conf, process_log log
+        WHERE conf.id_process = '$id_process' "
+        . " AND conf.id_process = log.id "
+        . " ORDER BY conf.lolos DESC";
 //        echo $sql;
 $query=$db_object->db_query($sql);
 $jumlah=$db_object->db_num_rows($query);
@@ -69,6 +70,10 @@ $jumlah=$db_object->db_num_rows($query);
                             echo "Min support: ".$row['min_support'];
                             echo "<br>";
                             echo "Min confidence: ".$row['min_confidence'];
+                            echo "<br>";
+                            echo "Start Date: ".format_date_db($row['start_date']);
+                            echo "<br>";
+                            echo "End Date: ".format_date_db($row['end_date']);
                         }
                         $kom1 = explode(" , ",$row['kombinasi1']);
                         $jika = implode(" Dan ", $kom1);

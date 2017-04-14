@@ -794,4 +794,9 @@ function format_date($date){
     return $date_ex[2]."-".$date_ex[1]."-".$date_ex[0];
 }
 
+function format_date_db($date){
+    $date_ex = explode("-", $date);
+    return $date_ex[2]."-".$date_ex[1]."-".$date_ex[0];
+}
+
 ?>
