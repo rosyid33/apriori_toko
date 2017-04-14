@@ -34,6 +34,14 @@ CREATE TABLE `confidence` (
 
 /*Data for the table `confidence` */
 
+insert  into `confidence`(`kombinasi1`,`kombinasi2`,`support_xUy`,`support_x`,`confidence`,`lolos`,`min_support`,`min_confidence`,`id_process`) values 
+('happy nappy pant M20','sgm soya 3 van 400',25,25,100,1,20,85,1),
+('sgm soya 3 van 400','happy nappy pant M20',25,25,100,1,20,85,1),
+('mpoko pant standart L30','bendera cair coklat kotak',20,35,57.142857142857,0,20,85,1),
+('bendera cair coklat kotak','mpoko pant standart L30',20,25,80,0,20,85,1),
+('cusson hair lotion','sweety FP XL34',25,30,83.333333333333,0,20,85,1),
+('sweety FP XL34','cusson hair lotion',25,25,100,1,20,85,1);
+
 /*Table structure for table `itemset1` */
 
 DROP TABLE IF EXISTS `itemset1`;
@@ -47,6 +55,107 @@ CREATE TABLE `itemset1` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `itemset1` */
+
+insert  into `itemset1`(`atribut`,`jumlah`,`support`,`lolos`,`id_process`) values 
+('zwitsal shampoo AVKS 100',1,5,0,1),
+('minyak telon lang 30',1,5,0,1),
+('huki niple L',3,15,0,1),
+('dot huki 250',3,15,0,1),
+('pampers eko pant M20',1,5,0,1),
+('popoku pant XL20',4,20,1,1),
+('sweety FP XL20',2,10,0,1),
+('sgm 1 plus van 900',1,5,0,1),
+('zwitsal hair lotion 200',1,5,0,1),
+('mpoko pant standart XXL24',1,5,0,1),
+('mpoko xtradry NB52',1,5,0,1),
+('happy nappy pant M20',5,25,1,1),
+('chilkid reg van 800',3,15,0,1),
+('chilschool van 800',2,10,0,1),
+('sgm ananda 1 400',2,10,0,1),
+('sgm 3 plus md 900',3,15,0,1),
+('sgm soya 3 van 400',5,25,1,1),
+('dancow 3 plus md 800',1,5,0,1),
+('mpoko pant standart L30',7,35,1,1),
+('mpoko xtradry XXL28',2,10,0,1),
+('mpoko xtrasoft girl XL24',1,5,0,1),
+('mpoko xtrasoft XXL20',1,5,0,1),
+('happy nappy M20',2,10,0,1),
+('sweety sns S12',1,5,0,1),
+('nutrillon 4 van 400',1,5,0,1),
+('nutrlon 3 van 800',1,5,0,1),
+('nutrillon ryl 4 van 800',1,5,0,1),
+('nutrillon soya 3 van 800',2,10,0,1),
+('nutrillon soya 4 van 400',1,5,0,1),
+('bebelove 1 800',1,5,0,1),
+('sgm 1 plus md 400',1,5,0,1),
+('bebelac 3 md 400',4,20,1,1),
+('sgm 3 plus md 400',1,5,0,1),
+('zwitsal baby bath MH 200',1,5,0,1),
+('JB cologne happy berries 125',2,10,0,1),
+('merries XL26',2,10,0,1),
+('mpoko pant standart M20',1,5,0,1),
+('sgm 1 plus van 150',4,20,1,1),
+('sgm 1 plus  md 900',2,10,0,1),
+('sgm soya 2 200',1,5,0,1),
+('sgm soya 4 400',4,20,1,1),
+('bendera cair coklat kotak',5,25,1,1),
+('JB cologne fresh blossoms 300',2,10,0,1),
+('cerelac BM',1,5,0,1),
+('minyak telon lang 100',1,5,0,1),
+('MKP caplang 120',1,5,0,1),
+('niple pigeon L',3,15,0,1),
+('nipple ninio',2,10,0,1),
+('lactogen 1 350',1,5,0,1),
+('kaos kaki ideal',3,15,0,1),
+('cussons baby powder',2,10,0,1),
+('mpoko pant standart L20',1,5,0,1),
+('mpoko pant standart XXL18',1,5,0,1),
+('popoku S20',1,5,0,1),
+('popoku L40',1,5,0,1),
+('mpoko xtrasoft boy XL24',1,5,0,1),
+('nutrilon 4 van 800',1,5,0,1),
+('sgm 3 plus van 900',1,5,0,1),
+('cusson hair lotion',6,30,1,1),
+('cussons shampoo alomnd',2,10,0,1),
+('mpoko pant standart XL20',1,5,0,1),
+('nutrillon soya 2 400',1,5,0,1),
+('bendera jelajah van 800',1,5,0,1),
+('mpoko xtradry XL34',1,5,0,1),
+('sweety FP M38',1,5,0,1),
+('lactogen 1 750',1,5,0,1),
+('happy nappy pant XL20',1,5,0,1),
+('sweety FP XL34',5,25,1,1),
+('DR p basic L8',1,5,0,1),
+('cd cewek',2,10,0,1),
+('zwitsal shampoo 300',2,10,0,1),
+('promina daging brokoli',1,5,0,1),
+('happy nappy M8',1,5,0,1),
+('happy nappy L20',1,5,0,1),
+('sweety FP XXL20',1,5,0,1),
+('fluffy L16',1,5,0,1),
+('sleek refil',2,10,0,1),
+('milna bubur ayam wortel',1,5,0,1),
+('sweety sns S27',1,5,0,1),
+('sgm 3 plus van 400',3,15,0,1),
+('mitu tissue basah',3,15,0,1),
+('happy nappy XL20',1,5,0,1),
+('bendera cair coklat botol',4,20,1,1),
+('bendera cair straw botol',3,15,0,1),
+('bendera cair straw kotak',2,10,0,1),
+('milna bubur pisang',1,5,0,1),
+('sweety FP S10',1,5,0,1),
+('tempat makan pang-pang',1,5,0,1),
+('dot huki',1,5,0,1),
+('pampers AB XL34',1,5,0,1),
+('sweety FP L36',2,10,0,1),
+('biscuit KH',1,5,0,1),
+('cutton buds huki',1,5,0,1),
+('merries M34',1,5,0,1),
+('underpad',1,5,0,1),
+('dancow batita van 500',2,10,0,1),
+('popoku L20',1,5,0,1),
+('mpoko pant standart L36',1,5,0,1),
+('mamamia L36',1,5,0,1);
 
 /*Table structure for table `itemset2` */
 
@@ -62,6 +171,63 @@ CREATE TABLE `itemset2` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `itemset2` */
+
+insert  into `itemset2`(`atribut1`,`atribut2`,`jumlah`,`support`,`lolos`,`id_process`) values 
+('popoku pant XL20','happy nappy pant M20',0,0,0,1),
+('popoku pant XL20','sgm soya 3 van 400',0,0,0,1),
+('popoku pant XL20','mpoko pant standart L30',2,10,0,1),
+('popoku pant XL20','bebelac 3 md 400',1,5,0,1),
+('popoku pant XL20','sgm 1 plus van 150',1,5,0,1),
+('popoku pant XL20','sgm soya 4 400',2,10,0,1),
+('popoku pant XL20','bendera cair coklat kotak',1,5,0,1),
+('popoku pant XL20','cusson hair lotion',1,5,0,1),
+('popoku pant XL20','sweety FP XL34',1,5,0,1),
+('popoku pant XL20','bendera cair coklat botol',0,0,0,1),
+('happy nappy pant M20','sgm soya 3 van 400',5,25,1,1),
+('happy nappy pant M20','mpoko pant standart L30',2,10,0,1),
+('happy nappy pant M20','bebelac 3 md 400',1,5,0,1),
+('happy nappy pant M20','sgm 1 plus van 150',2,10,0,1),
+('happy nappy pant M20','sgm soya 4 400',2,10,0,1),
+('happy nappy pant M20','bendera cair coklat kotak',1,5,0,1),
+('happy nappy pant M20','cusson hair lotion',0,0,0,1),
+('happy nappy pant M20','sweety FP XL34',0,0,0,1),
+('happy nappy pant M20','bendera cair coklat botol',1,5,0,1),
+('sgm soya 3 van 400','mpoko pant standart L30',2,10,0,1),
+('sgm soya 3 van 400','bebelac 3 md 400',1,5,0,1),
+('sgm soya 3 van 400','sgm 1 plus van 150',2,10,0,1),
+('sgm soya 3 van 400','sgm soya 4 400',2,10,0,1),
+('sgm soya 3 van 400','bendera cair coklat kotak',1,5,0,1),
+('sgm soya 3 van 400','cusson hair lotion',0,0,0,1),
+('sgm soya 3 van 400','sweety FP XL34',0,0,0,1),
+('sgm soya 3 van 400','bendera cair coklat botol',1,5,0,1),
+('mpoko pant standart L30','bebelac 3 md 400',2,10,0,1),
+('mpoko pant standart L30','sgm 1 plus van 150',3,15,0,1),
+('mpoko pant standart L30','sgm soya 4 400',3,15,0,1),
+('mpoko pant standart L30','bendera cair coklat kotak',4,20,1,1),
+('mpoko pant standart L30','cusson hair lotion',2,10,0,1),
+('mpoko pant standart L30','sweety FP XL34',2,10,0,1),
+('mpoko pant standart L30','bendera cair coklat botol',2,10,0,1),
+('bebelac 3 md 400','sgm 1 plus van 150',2,10,0,1),
+('bebelac 3 md 400','sgm soya 4 400',2,10,0,1),
+('bebelac 3 md 400','bendera cair coklat kotak',1,5,0,1),
+('bebelac 3 md 400','cusson hair lotion',0,0,0,1),
+('bebelac 3 md 400','sweety FP XL34',0,0,0,1),
+('bebelac 3 md 400','bendera cair coklat botol',0,0,0,1),
+('sgm 1 plus van 150','sgm soya 4 400',3,15,0,1),
+('sgm 1 plus van 150','bendera cair coklat kotak',2,10,0,1),
+('sgm 1 plus van 150','cusson hair lotion',1,5,0,1),
+('sgm 1 plus van 150','sweety FP XL34',0,0,0,1),
+('sgm 1 plus van 150','bendera cair coklat botol',0,0,0,1),
+('sgm soya 4 400','bendera cair coklat kotak',2,10,0,1),
+('sgm soya 4 400','cusson hair lotion',1,5,0,1),
+('sgm soya 4 400','sweety FP XL34',1,5,0,1),
+('sgm soya 4 400','bendera cair coklat botol',0,0,0,1),
+('bendera cair coklat kotak','cusson hair lotion',3,15,0,1),
+('bendera cair coklat kotak','sweety FP XL34',3,15,0,1),
+('bendera cair coklat kotak','bendera cair coklat botol',2,10,0,1),
+('cusson hair lotion','sweety FP XL34',5,25,1,1),
+('cusson hair lotion','bendera cair coklat botol',2,10,0,1),
+('sweety FP XL34','bendera cair coklat botol',2,10,0,1);
 
 /*Table structure for table `itemset3` */
 
@@ -79,6 +245,20 @@ CREATE TABLE `itemset3` (
 
 /*Data for the table `itemset3` */
 
+insert  into `itemset3`(`atribut1`,`atribut2`,`atribut3`,`jumlah`,`support`,`lolos`,`id_process`) values 
+('happy nappy pant M20','mpoko pant standart L30','sgm soya 3 van 400',2,10,0,1),
+('happy nappy pant M20','mpoko pant standart L30','bendera cair coklat kotak',1,5,0,1),
+('happy nappy pant M20','sgm soya 3 van 400','bendera cair coklat kotak',1,5,0,1),
+('mpoko pant standart L30','sgm soya 3 van 400','bendera cair coklat kotak',1,5,0,1),
+('happy nappy pant M20','cusson hair lotion','sgm soya 3 van 400',0,0,0,1),
+('happy nappy pant M20','cusson hair lotion','sweety FP XL34',0,0,0,1),
+('happy nappy pant M20','sgm soya 3 van 400','sweety FP XL34',0,0,0,1),
+('cusson hair lotion','sgm soya 3 van 400','sweety FP XL34',0,0,0,1),
+('mpoko pant standart L30','cusson hair lotion','bendera cair coklat kotak',2,10,0,1),
+('mpoko pant standart L30','cusson hair lotion','sweety FP XL34',2,10,0,1),
+('mpoko pant standart L30','bendera cair coklat kotak','sweety FP XL34',2,10,0,1),
+('cusson hair lotion','bendera cair coklat kotak','sweety FP XL34',3,15,0,1);
+
 /*Table structure for table `process_log` */
 
 DROP TABLE IF EXISTS `process_log`;
@@ -90,9 +270,12 @@ CREATE TABLE `process_log` (
   `min_support` double DEFAULT NULL,
   `min_confidence` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `process_log` */
+
+insert  into `process_log`(`id`,`start_date`,`end_date`,`min_support`,`min_confidence`) values 
+(1,'2016-09-01','2017-09-30',20,85);
 
 /*Table structure for table `transaksi` */
 
@@ -103,11 +286,46 @@ CREATE TABLE `transaksi` (
   `transaction_date` date DEFAULT NULL,
   `produk` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 /*Data for the table `transaksi` */
 
 insert  into `transaksi`(`id`,`transaction_date`,`produk`) values 
+(1,'2016-11-11','zwitsal shampoo AVKS 100,minyak telon lang 30,huki niple L,dot huki 250,pampers eko pant M20,popoku pant XL20,sweety FP XL20,sgm 1 plus van 900'),
+(2,'2016-11-12','zwitsal hair lotion 200,dot huki 250,mpoko pant standart XXL24,mpoko xtradry NB52,happy nappy pant M20,chilkid reg van 800,chilschool van 800,sgm ananda 1 400,sgm 3 plus md 900,sgm soya 3 van 400,dancow 3 plus md 800'),
+(3,'2016-11-13','dot huki 250,popoku pant XL20,mpoko pant standart L30,mpoko xtradry XXL28,mpoko xtrasoft girl XL24,mpoko xtrasoft XXL20,happy nappy M20,sweety sns S12,nutrillon 4 van 400,nutrlon 3 van 800,nutrillon ryl 4 van 800,nutrillon soya 3 van 800,nutrillon soya 4 van 400,bebelove 1 800,sgm 1 plus md 400,sgm 3 plus md 900'),
+(4,'2016-11-14','bebelac 3 md 400,sgm 3 plus md 400,sgm 3 plus md 900'),
+(5,'2016-11-15','zwitsal baby bath MH 200,JB cologne happy berries 125,huki niple L,merries XL26,mpoko pant standart M20,mpoko pant standart L30,happy nappy pant M20,chilschool van 800,sgm 1 plus van 150,sgm 1 plus  md 900,sgm soya 2 200,sgm soya 3 van 400,sgm soya 4 400,bendera cair coklat kotak'),
+(6,'2016-11-16','JB cologne fresh blossoms 300,JB cologne happy berries 125,cerelac BM,minyak telon lang 100,MKP caplang 120,niple pigeon L,nipple ninio,popoku pant XL20,mpoko pant standart L30,lactogen 1 350,bebelac 3 md 400,sgm 1 plus van 150,sgm 1 plus  md 900,sgm soya 4 400,bendera cair coklat kotak,kaos kaki ideal'),
+(7,'2016-11-17','cussons baby powder,mpoko pant standart L20,mpoko pant standart L30,mpoko pant standart XXL18,happy nappy pant M20,nutrillon soya 3 van 800,chilkid reg van 800,bebelac 3 md 400,sgm 1 plus van 150,sgm soya 3 van 400,sgm soya 4 400'),
+(8,'2016-11-18','huki niple L,popoku S20,popoku L40,mpoko xtrasoft boy XL24,nutrilon 4 van 800,bebelac 3 md 400,sgm ananda 1 400,sgm 3 plus van 900'),
+(9,'2016-11-19','cusson hair lotion,cussons shampoo alomnd,mpoko pant standart XL20,nutrillon soya 2 400,bendera jelajah van 800,sgm 1 plus van 150'),
+(10,'2016-11-20','niple pigeon L,mpoko pant standart L30,mpoko xtradry XL34,mpoko xtradry XXL28,sweety FP M38,lactogen 1 750'),
+(11,'2016-09-20','cusson hair lotion,JB cologne fresh blossoms 300,merries XL26,popoku pant XL20,happy nappy pant XL20,sweety FP XL20,sweety FP XL34,sgm soya 4 400,DR p basic L8,cd cewek'),
+(12,'2016-09-21','zwitsal shampoo 300,promina daging brokoli,happy nappy M8,happy nappy M20,happy nappy L20,happy nappy pant M20,sweety FP XXL20,fluffy L16,sgm soya 3 van 400'),
+(13,'2016-09-22','cusson hair lotion,sleek refil,milna bubur ayam wortel,sweety sns S27,sweety FP XL34,sgm 3 plus van 400,mitu tissue basah,kaos kaki ideal'),
+(14,'2016-09-23','cusson hair lotion,mpoko pant standart L30,happy nappy XL20,sweety FP XL34,chilkid reg van 800,bendera cair coklat botol,bendera cair coklat kotak,bendera cair straw botol,bendera cair straw kotak'),
+(15,'2016-09-24','cusson hair lotion,cussons shampoo alomnd,zwitsal shampoo 300,milna bubur pisang,sweety FP S10,sweety FP XL34,bendera cair coklat kotak,tempat makan pang-pang,kaos kaki ideal,dot huki'),
+(16,'2016-09-25','cussons baby powder,pampers AB XL34,happy nappy pant M20,sweety FP L36,sgm 3 plus van 400,sgm soya 3 van 400,bendera cair coklat botol,mitu tissue basah'),
+(17,'2016-09-26','biscuit KH,cutton buds huki,niple pigeon L,nipple ninio,merries M34,sgm 3 plus van 400,bendera cair coklat botol,mitu tissue basah,underpad,cd cewek'),
+(18,'2016-09-27','cusson hair lotion,sleek refil,mpoko pant standart L30,sweety FP XL34,dancow batita van 500,bendera cair coklat botol,bendera cair coklat kotak,bendera cair straw botol,bendera cair straw kotak'),
+(19,'2016-09-28',''),
+(20,'2016-09-29','popoku L20,mpoko pant standart L36,sweety FP L36,mamamia L36,dancow batita van 500,bendera cair straw botol');
+
+/*Table structure for table `transaksi_old` */
+
+DROP TABLE IF EXISTS `transaksi_old`;
+
+CREATE TABLE `transaksi_old` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `transaction_date` date DEFAULT NULL,
+  `produk` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=latin1;
+
+/*Data for the table `transaksi_old` */
+
+insert  into `transaksi_old`(`id`,`transaction_date`,`produk`) values 
 (1,'2016-11-11','zwitsal shampoo AVKS 100'),
 (2,'2016-11-11','minyak telon lang 30'),
 (3,'2016-11-11','huki niple L'),

@@ -31,27 +31,10 @@ if(isset($_GET['pesan_success'])){
     $pesan_success = $_GET['pesan_success'];
 }
 
-if(isset($_POST['submit'])){
-    $result = mining_process($db_object);
-    
-    if($result){
-        ?>
-        <script> location.replace("?menu=proses_apriori&pesan_success=Proses mining selesai"); </script>
-        <?php
-    }
-    else{
-        ?>
-        <script> location.replace("?menu=proses_apriori&pesan_error=Gagal mendapatkan aturan asosiasi"); </script>
-        <?php
-    }
-    
-}
-//15 dan 28 september 2016 tidak ada data
-
 $sql = "SELECT
         *
         FROM
-         confidence WHERE lolos = 1 ";
+         process_log ";
 $query=$db_object->db_query($sql);
 $jumlah=$db_object->db_num_rows($query);
 ?>
@@ -83,25 +66,34 @@ $jumlah=$db_object->db_num_rows($query);
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
                 <th>No</th>
-                <th>Rule</th>
-                <th>Confidence</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Min Support</th>
+                <th>Min Confidence</th>
+                <th></th>
                 </tr>
                 <?php
                     $no=1;
                     while($row=$db_object->db_fetch_array($query)){
-                        if($no==1){
-                            echo "Min support: ".$row['min_support'];
-                            echo "<br>";
-                            echo "Min confidence: ".$row['min_confidence'];
-                        }
-                        $kom1 = explode(" , ",$row['kombinasi1']);
-                        $jika = implode(" Dan ", $kom1);
-                        $kom2 = explode(" , ",$row['kombinasi2']);
-                        $maka = implode(" Dan ", $kom2);
+//                        if($no==1){
+//                            echo "Min support: ".$row['min_support'];
+//                            echo "<br>";
+//                            echo "Min confidence: ".$row['min_confidence'];
+//                        }
+//                        $kom1 = explode(" , ",$row['kombinasi1']);
+//                        $jika = implode(" Dan ", $kom1);
+//                        $kom2 = explode(" , ",$row['kombinasi2']);
+//                        $maka = implode(" Dan ", $kom2);
                             echo "<tr>";
                             echo "<td>".$no."</td>";
-                            echo "<td>Jika ".$jika.", Maka ".$maka."</td>";
-                            echo "<td>".price_format($row['confidence'])."</td>";
+                            echo "<td>".$row['start_date']."</td>";
+                            echo "<td>".$row['end_date']."</td>";
+                            echo "<td>".$row['min_support']."</td>";
+                            echo "<td>".$row['min_confidence']."</td>";
+                            $view = "<a href='index.php?menu=view_rule&id_process=".$row['id']."'>View rule</a>";
+                            echo "<td>".$view."</td>";
+//                            echo "<td>Jika ".$jika.", Maka ".$maka."</td>";
+//                            echo "<td>".price_format($row['confidence'])."</td>";
                         echo "</tr>";
                         $no++;
                     }
