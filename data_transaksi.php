@@ -54,8 +54,8 @@ if(isset($_POST['submit'])){
             //     else{
                     $table = "transaksi";
                     // $produkIn = get_produk_to_in($temp_produk);
-                    $temp_date = $value[2];
-                    $produkIn = $value[3];
+                    $temp_date = format_date($value[1]);
+                    $produkIn = $value[2];
                     //$item1 = explode(",", $produkIn);
                     
                     
@@ -117,11 +117,11 @@ $jumlah=$db_object->db_num_rows($query);
                     </div>
                 </div>
                 <div class="form-group">
-                    <input name="submit" type="submit" value="Create" class="btn btn-success">
+                    <input name="submit" type="submit" value="Upload Data" class="btn btn-success">
                 </div>
                 <div class="form-group">
                     <button name="delete" type="submit"  class="btn btn-danger" >
-                        <i class="fa fa-trash-o"></i> Delete
+                        <i class="fa fa-trash-o"></i> Delete All Data Transaction
                     </button>
                 </div>
             </form>

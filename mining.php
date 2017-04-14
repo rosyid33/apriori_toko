@@ -33,78 +33,78 @@ function is_exist_variasi_itemset($array_item1, $array_item2, $item1, $item2) {
 function mining_process($db_object, $min_support, $min_confidence, $start_date, $end_date, $id_process){
     //remove reset truncate (change to log mode)
     //reset_temporary($db_object);
+
+    //get  transaksi data to array variable
+    $sql_trans = "SELECT * FROM transaksi 
+            WHERE transaction_date BETWEEN '$start_date' AND '$end_date' ";
+    $result_trans = $db_object->db_query($sql_trans);
+    $dataTransaksi = $item_list = array();
+    $jumlah_transaksi = $db_object->db_num_rows($result_trans);
+    $x=0;
+    while($myrow = $db_object->db_fetch_array($result_trans)){
+        $dataTransaksi[$x]['tanggal'] = $myrow['transaction_date'];
+        $dataTransaksi[$x]['produk'] = $myrow['produk'].",";
+        $produk = explode(",", $myrow['produk']);
+        //all items
+        foreach ($produk as $key => $value_produk) {
+            if(!in_array($value_produk, $item_list)){
+                if(!empty($value_produk)){
+                    $item_list[] = $value_produk;
+                }
+            }
+        }
+        $x++;
+    }
     
-    $sql = "SELECT transaction_date FROM transaksi "
-            . " WHERE  transaction_date BETWEEN '$start_date' AND '$end_date' "
-            . " GROUP BY transaction_date";
-    $query=$db_object->db_query($sql);
-    $jumlah_transaksi=$db_object->db_num_rows($query);
     
-    //bulid itemset1
-    $sql1 = "SELECT
-            produk,
-            COUNT(produk) AS jml,
-            (COUNT(produk) / $jumlah_transaksi) * 100 AS support
-          FROM
-            transaksi
-          WHERE produk != ''
-          AND transaction_date BETWEEN '$start_date' AND '$end_date' 
-          GROUP BY produk";
-    $query1=$db_object->db_query($sql1);
-    $itemset1 = array();
-    echo "<strong>Itemset 1:</strong>
-            <table class = 'table table-bordered table-striped  table-hover'>
+    //build itemset 1
+    echo "<br><strong>Itemset 1:</strong><br>";
+    echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
-            <th>No</th>
-            <th>Item</th>
-            <th>Jumlah</th>
-            <th>Support</th>
-            <th></th>
+                <th>Item</th>
+                <th>Jumlah</th>
+                <th>Suppport</th>
+                <th></th>
             </tr>";
-    $no = 1;
-    while($row = $db_object->db_fetch_array($query1)){
-        $produk = $row['produk'];
-        $jml = $row['jml'];
-        $support = $row['support'];
-        $lolos = ($support >= $min_support)? 1:0;
-        $field_value = array(
-                        "atribut"=>($produk),
-                        "jumlah"=>$jml,
-                        "support"=>$support,
-                        "lolos"=>$lolos,
-                        "id_process"=>$id_process
-                    );
-        $query = $db_object->insert_record("itemset1", $field_value);
-        
+    $itemset1 = $valueIn = array();
+    foreach ($item_list as $key => $item) {
+        $jumlah = jumlah_itemset1($dataTransaksi, $item);
+        $support = ($jumlah/$jumlah_transaksi) * 100;
+        $lolos = ($support>=$min_support)?"1":"0";
+        $valueIn[] = "('$item','$jumlah','$support','$lolos','$id_process')";
         if($lolos){
-            $itemset1[] = $produk;
+            $itemset1[] = $item;//item yg lolos itemset1
         }
         echo "<tr>";
-        echo "<td>" . $no . "</td>";
-        echo "<td>" . $produk . "</td>";
-        echo "<td>" . $jml . "</td>";
-        echo "<td>" . price_format($support) . "</td>";
-        echo "<td>" . ($lolos == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+        echo "<td>" . $item . "</td>";
+        echo "<td>" . $jumlah . "</td>";
+        echo "<td>" . $support . "</td>";
+        echo "<td>" . (($lolos==1)?"Lolos":"Tidak Lolos") . "</td>";
         echo "</tr>";
-        $no++;
     }
     echo "</table>";
+    //insert into itemset1 one query with many value
+    $value_insert = implode(",", $valueIn);
+    $sql_insert_itemset1 = "INSERT INTO itemset1 (atribut, jumlah, support, lolos, id_process) "
+            . " VALUES ".$value_insert;
+    $db_object->db_query($sql_insert_itemset1);
+    
     
     //build itemset2
-    $a = 0;
+    echo "<br><strong>Itemset 2:</strong><br>";
+    echo "<table class='table table-bordered table-striped  table-hover'>
+            <tr>
+                <th>Item1</th>
+                <th>Item2</th>
+                <th>Jumlah</th>
+                <th>Suppport</th>
+                <th></th>
+            </tr>";
     $NilaiAtribut1 = $NilaiAtribut2 = array();
     $itemset2_var1 = $itemset2_var2 = array();
-    echo "<strong>Itemset 2:</strong>
-            <table class='table table-bordered table-striped  table-hover'>
-                <tr>
-                    <th>No</th>
-                    <th>Item 1</th>
-                    <th>Item 2</th>
-                    <th>Jumlah</th>
-                    <th>Support</th>
-                    <th></th>
-                </tr>";
+    $valueIn_itemset2 = array();
     $no=1;
+    $a = 0;
     while ($a <= count($itemset1)) {
         $b = 0;
         while ($b <= count($itemset1)) {
@@ -113,36 +113,26 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             if (!empty($variance1) && !empty($variance2)) {
                 if ($variance1 != $variance2) {
                     if(!is_exist_variasi_itemset($NilaiAtribut1, $NilaiAtribut2, $variance1, $variance2)) {
-                        $jml_itemset2 = get_count_itemset2($db_object, $variance1, $variance2, $start_date, $end_date);
+                        //$jml_itemset2 = get_count_itemset2($db_object, $variance1, $variance2, $start_date, $end_date);
+                        $jml_itemset2 = jumlah_itemset2($dataTransaksi, $variance1, $variance2);
                         $NilaiAtribut1[] = $variance1;
                         $NilaiAtribut2[] = $variance2;
 
                         $support2 = ($jml_itemset2/$jumlah_transaksi) * 100;
                         $lolos = ($support2 >= $min_support)? 1:0;
-                        //masukkan ke table itemset2
-                        $db_object->insert_record("itemset2", 
-                        array("atribut1" => $variance1,
-                                "atribut2" => $variance2,
-                                "jumlah" => $jml_itemset2,
-                                "support" => $support2,
-                                "lolos" => $lolos,
-                                "id_process"=>$id_process
-                        ));     
                         
+                        $valueIn_itemset2[] = "('$variance1','$variance2','$jml_itemset2','$support2','$lolos','$id_process')";
                         if($lolos){
                             $itemset2_var1[] = $variance1;
                             $itemset2_var2[] = $variance2;
                         }
-                        
                         echo "<tr>";
-                        echo "<td>" . $no . "</td>";
                         echo "<td>" . $variance1 . "</td>";
                         echo "<td>" . $variance2 . "</td>";
                         echo "<td>" . $jml_itemset2 . "</td>";
-                        echo "<td>" . price_format($support2) . "</td>";
-                        echo "<td>" . ($lolos == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+                        echo "<td>" . $support2 . "</td>";
+                        echo "<td>" . (($lolos==1)?"Lolos":"Tidak Lolos") . "</td>";
                         echo "</tr>";
-                        $no++;
                     }
                 }
             }
@@ -151,21 +141,26 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
         $a++;
     }
     echo "</table>";
+    //insert into itemset2 one query with many value
+    $value_insert_itemset2 = implode(",", $valueIn_itemset2);
+    $sql_insert_itemset2 = "INSERT INTO itemset2 (atribut1, atribut2, jumlah, support, lolos, id_process) "
+            . " VALUES ".$value_insert_itemset2;
+    $db_object->db_query($sql_insert_itemset2);
+    
     
     //build itemset3
+    echo "<br><strong>Itemset 3:</strong><br>";
+    echo "<table class='table table-bordered table-striped  table-hover'>
+            <tr>
+                <th>Item1</th>
+                <th>Item2</th>
+                <th>Item3</th>
+                <th>Jumlah</th>
+                <th>Suppport</th>
+                <th></th>
+            </tr>";
     $a = 0;
-    $tigaVariasiItem = array();
-    echo "<strong>Itemset 3:</strong>
-    <table class='table table-bordered table-striped  table-hover'>
-        <tr>
-            <th>No</th>
-            <th>Item 1</th>
-            <th>Item 2</th>
-            <th>Item 3</th>
-            <th>Jumlah</th>
-            <th>Support</th>
-            <th></th>
-        </tr>";
+    $tigaVariasiItem = $valueIn_itemset3 =  array();
     $no=1;
     while ($a <= count($itemset2_var1)) {
         $b = 0;
@@ -203,32 +198,24 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                             }
                             
                             //jumlah item set3 dan menghitung supportnya
-                            $jml_itemset3 = get_count_itemset3($db_object, $itemset1, $itemset2, $itemset3, $start_date, $end_date);
+                            //$jml_itemset3 = get_count_itemset3($db_object, $itemset1, $itemset2, $itemset3, $start_date, $end_date);
+                            $jml_itemset3 = jumlah_itemset3($dataTransaksi, $itemset1, $itemset2, $itemset3);
                             $support3 = ($jml_itemset3/$jumlah_transaksi) * 100;
                             $lolos = ($support3 >= $min_support)? 1:0;
-                            //masukkan ke table itemset3
-                            $db_object->insert_record("itemset3", array("atribut1" => $itemset1,
-                                "atribut2" => $itemset2,
-                                "atribut3" => $itemset3,
-                                "jumlah" => $jml_itemset3,
-                                "support" => $support3,
-                                "lolos" => $lolos,
-                                "id_process" => $id_process
-                            ));
+                            
+                            $valueIn_itemset3[] = "('$itemset1','$itemset2','$itemset3','$jml_itemset3','$support3','$lolos','$id_process')";
                             
                             echo "<tr>";
-                            echo "<td>" . $no . "</td>";
-                            echo "<td>" . $itemset1. "</td>";
+                            echo "<td>" . $itemset1 . "</td>";
                             echo "<td>" . $itemset2 . "</td>";
                             echo "<td>" . $itemset3 . "</td>";
                             echo "<td>" . $jml_itemset3 . "</td>";
-                            echo "<td>" . price_format($support3) . "</td>";
-                            echo "<td>" . ($lolos == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+                            echo "<td>" . $support3 . "</td>";
+                            echo "<td>" . (($lolos==1)?"Lolos":"Tidak Lolos") . "</td>";
                             echo "</tr>";
                             $no++;
                         }
                     }
-                    
                 }
             }
             $b++;
@@ -236,7 +223,12 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
         $a++;
     }
     echo "</table>";
-
+    //insert into itemset3 one query with many value
+    $value_insert_itemset3 = implode(",", $valueIn_itemset3);
+    $sql_insert_itemset3 = "INSERT INTO itemset3(atribut1, atribut2, atribut3, jumlah, support, lolos, id_process) "
+            . " VALUES ".$value_insert_itemset3;
+    $db_object->db_query($sql_insert_itemset3);
+    
 
     //hitung confidence
     $confidence_from_itemset = 0;
@@ -538,3 +530,45 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
                     ));
         }
 }
+
+
+function jumlah_itemset1($transaksi_list, $produk){
+    $count = 0;
+    foreach ($transaksi_list as $key => $data) {
+        $items = $data['produk'];
+        $pos = strpos($items, $produk.",");
+        if($pos!==false){//was found at position $pos
+            $count++;
+        }
+    }
+    return $count;
+}
+
+function jumlah_itemset2($transaksi_list, $variasi1, $variasi2){
+    $count = 0;
+    foreach ($transaksi_list as $key => $data) {
+        $items = $data['produk'];
+        $pos1 = strpos($items, $variasi1.",");
+        $pos2 = strpos($items, $variasi2.",");
+        if($pos1!==false && $pos2!==false){//was found at position $pos
+            $count++;
+        }
+    }
+    return $count;
+}
+
+function jumlah_itemset3($transaksi_list, $variasi1, $variasi2, $variasi3){
+    $count = 0;
+    foreach ($transaksi_list as $key => $data) {
+        $items = $data['produk'];
+        $pos1 = strpos($items, $variasi1.",");
+        $pos2 = strpos($items, $variasi2.",");
+        $pos3 = strpos($items, $variasi3.",");
+        if($pos1!==false && $pos2!==false && $pos3!==false){//was found at position $pos
+            $count++;
+        }
+    }
+    return $count;
+}
+
+
