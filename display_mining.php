@@ -93,33 +93,61 @@ function display_process_hasil_mining($db_object, $id_process) {
 //        ?>
     <!--</table>-->
 
-
-
+    <?php
+    $sql1 = "SELECT * FROM confidence "
+                . " WHERE id_process = ".$id_process
+                . " ORDER BY lolos DESC";
+    $query1 = $db_object->db_query($sql1);
+    ?>
+    <table class='table table-bordered table-striped  table-hover'>
+        <tr>
+        <th>X => Y</th>
+        <th>Support X U Y</th>
+        <th>Support X </th>
+        <th>Confidence</th>
+        </tr>
+        <?php
+            $no=1;
+            $data_confidence = array();
+            while($row=$db_object->db_fetch_array($query1)){
+                    echo "<tr>";
+                    echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
+                    echo "<td>".price_format($row['support_xUy'])."</td>";
+                    echo "<td>".price_format($row['support_x'])."</td>";
+                    echo "<td>".price_format($row['confidence'])."</td>";
+                echo "</tr>";
+                $no++;
+                $data_confidence[] = $row;
+            }
+            ?>
+    </table>
 
     <strong>Rule Asosiasi yang terbentuk:</strong>
     <table class='table table-bordered table-striped  table-hover'>
         <tr>
             <th>No</th>
-            <th>Rule</th>
+            <th>X => Y</th>
             <th>Confidence</th>
+            <th>Nilai Uji lift</th>
+            <th>Korelasi rule</th>
             <th></th>
         </tr>
         <?php
-        $sql1 = "SELECT * FROM confidence "
-                . " WHERE id_process = ".$id_process
-                . " ORDER BY lolos DESC";
-        $query1 = $db_object->db_query($sql1);
+        
         $no = 1;
-        while ($row1 = $db_object->db_fetch_array($query1)) {
-            $kom1 = explode(" , ", $row1['kombinasi1']);
-            $jika = implode(" Dan ", $kom1);
-            $kom2 = explode(" , ", $row1['kombinasi2']);
-            $maka = implode(" Dan ", $kom2);
+        //while ($row1 = $db_object->db_fetch_array($query1)) {
+        foreach($data_confidence as $key => $val){
+//            $kom1 = explode(" , ", $row1['kombinasi1']);
+//            $jika = implode(" Dan ", $kom1);
+//            $kom2 = explode(" , ", $row1['kombinasi2']);
+//            $maka = implode(" Dan ", $kom2);
             echo "<tr>";
             echo "<td>" . $no . "</td>";
-            echo "<td>Jika " . $jika . ", Maka " . $maka . "</td>";
-            echo "<td>" . price_format($row1['confidence']) . "</td>";
-            echo "<td>" . ($row1['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+            echo "<td>" . $val['kombinasi1']." => ".$val['kombinasi2'] . "</td>";
+            echo "<td>" . price_format($val['confidence']) . "</td>";
+            echo "<td>" . price_format($val['nilai_uji_lift']) . "</td>";
+            echo "<td>" . ($val['korelasi_rule']) . "</td>";
+            echo "<td>" . ($val['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
             echo "</tr>";
             $no++;
         }

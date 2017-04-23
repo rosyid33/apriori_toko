@@ -247,27 +247,27 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             
             //1,2 => 3
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut2, $atribut3, $id_process);
+                    $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //1,3 => 2
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut3, $atribut2, $id_process);
+                    $atribut1, $atribut3, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //2,3 => 1
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut3, $atribut2, $id_process);
+                    $atribut2, $atribut3, $atribut1, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //1 => 2,3
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut2, $atribut3, $id_process);
+                    $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //2 => 1,3
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-                    $atribut2, $atribut1, $atribut3, $id_process);
+                    $atribut2, $atribut1, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //3 => 1,2
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-                    $atribut3, $atribut1, $atribut2, $id_process);
+                    $atribut3, $atribut1, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
             
         }
     }
@@ -284,10 +284,10 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             $supp_xuy = $row_2['support'];
             
             //1 => 2
-            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut1, $atribut2, $id_process);
+            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut1, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //2 => 1
-            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut2, $atribut1, $id_process);
+            hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence, $atribut2, $atribut1, $id_process, $dataTransaksi, $jumlah_transaksi);
         }
     }
 
@@ -433,7 +433,7 @@ function get_count_itemset3($db_object, $atribut1, $atribut2, $atribut3, $start_
  * @param type $atribut3
  */
 function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
-        $atribut1, $atribut2, $atribut3, $id_process){
+        $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi){
     
     $sql1_ = "SELECT support FROM itemset2 "
             . " WHERE atribut1 = '".$atribut1."' "
@@ -447,6 +447,20 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
         $conf = ($supp_xuy/$supp_x)*100;
         //lolos seleksi min confidence itemset3
         $lolos = ($conf >= $min_confidence)? 1:0;
+        
+        //hitung korelasi lift
+        $jumlah_kemunculanAB = jumlah_itemset3($dataTransaksi, $atribut1, $atribut2, $atribut3);
+        $PAUB = $jumlah_kemunculanAB/$jumlah_transaksi;
+        
+        $jumlah_kemunculanA = jumlah_itemset2($dataTransaksi, $atribut1, $atribut2);
+        $jumlah_kemunculanB = jumlah_itemset1($dataTransaksi, $atribut3);
+        
+        $nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+        $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
+        if($nilai_uji_lift==1){
+            $korelasi_rule = "tidak ada korelasi";
+        }
+        
         //masukkan ke table confidence
         $db_object->insert_record("confidence", 
                 array("kombinasi1" => $kombinasi1,
@@ -457,6 +471,8 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
                     "lolos" => $lolos,
                     "min_support" => $min_support,
                     "min_confidence" => $min_confidence,
+                    "nilai_uji_lift" => $nilai_uji_lift,
+                    "korelasi_rule" => $korelasi_rule,
                     "id_process" => $id_process
                 ));
     }
@@ -474,7 +490,7 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
  * @param type $atribut3
  */
 function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-        $atribut1, $atribut2, $atribut3, $id_process){
+        $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi){
     
         $sql4_ = "SELECT support FROM itemset1 "
                 . " WHERE atribut = '".$atribut1."' "
@@ -487,6 +503,21 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
             $conf = ($supp_xuy/$supp_x)*100;
             //lolos seleksi min confidence itemset3
             $lolos = ($conf >= $min_confidence)? 1:0;
+            
+            //hitung korelasi lift
+            $jumlah_kemunculanAB = jumlah_itemset3($dataTransaksi, $atribut1, $atribut2, $atribut3);
+            $PAUB = $jumlah_kemunculanAB/$jumlah_transaksi;
+
+            $jumlah_kemunculanA = jumlah_itemset1($dataTransaksi, $atribut1);
+            $jumlah_kemunculanB = jumlah_itemset2($dataTransaksi, $atribut2, $atribut3);
+
+            $nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+            $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
+            if($nilai_uji_lift==1){
+                $korelasi_rule = "tidak ada korelasi";
+            }
+        
+        
             //masukkan ke table confidence
             $db_object->insert_record("confidence", 
                     array("kombinasi1" => $kombinasi1,
@@ -497,6 +528,8 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
                         "lolos" => $lolos,
                         "min_support" => $min_support,
                         "min_confidence" => $min_confidence,
+                        "nilai_uji_lift" => $nilai_uji_lift,
+                        "korelasi_rule" => $korelasi_rule,
                         "id_process" => $id_process
                     ));
         }
@@ -504,7 +537,7 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
 
 
 function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence,
-        $atribut1, $atribut2, $id_process){
+        $atribut1, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi){
     
         $sql1_ = "SELECT support FROM itemset1 "
                     . " WHERE atribut = '".$atribut1."' AND id_process = ".$id_process;
@@ -516,6 +549,20 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
             $conf = ($supp_xuy/$supp_x)*100;
             //lolos seleksi min confidence itemset3
             $lolos = ($conf >= $min_confidence)? 1:0;
+            
+            //hitung korelasi lift
+            $jumlah_kemunculanAB = jumlah_itemset2($dataTransaksi, $atribut1, $atribut2);
+            $PAUB = $jumlah_kemunculanAB/$jumlah_transaksi;
+
+            $jumlah_kemunculanA = jumlah_itemset1($dataTransaksi, $atribut1);
+            $jumlah_kemunculanB = jumlah_itemset1($dataTransaksi, $atribut2);
+
+            $nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+            $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
+            if($nilai_uji_lift==1){
+                $korelasi_rule = "tidak ada korelasi";
+            }
+            
             //masukkan ke table confidence
             $db_object->insert_record("confidence", 
                     array("kombinasi1" => $kombinasi1,
@@ -526,6 +573,8 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
                         "lolos" => $lolos,
                         "min_support" => $min_support,
                         "min_confidence" => $min_confidence,
+                        "nilai_uji_lift" => $nilai_uji_lift,
+                        "korelasi_rule" => $korelasi_rule,
                         "id_process" => $id_process
                     ));
         }

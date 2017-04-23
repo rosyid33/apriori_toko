@@ -58,32 +58,58 @@ $jumlah=$db_object->db_num_rows($query);
             ?>
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
-                <th>No</th>
-                <th>Rule</th>
+                <th>X => Y</th>
+                <th>Support X U Y</th>
+                <th>Support X </th>
                 <th>Confidence</th>
+                </tr>
+                <?php
+                    $no=1;
+                    $data_confidence = array();
+                    while($row=$db_object->db_fetch_array($query)){
+                            echo "<tr>";
+                            echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
+                            echo "<td>".price_format($row['support_xUy'])."</td>";
+                            echo "<td>".price_format($row['support_x'])."</td>";
+                            echo "<td>".price_format($row['confidence'])."</td>";
+                        echo "</tr>";
+                        $no++;
+                        $data_confidence[] = $row;
+                    }
+                    ?>
+            </table>
+            
+            <strong>Rule Asosiasi:</strong>
+            <table class='table table-bordered table-striped  table-hover'>
+                <tr>
+                <th>No</th>
+                <th>X => Y</th>
+                <th>Confidence</th>
+                <th>Nilai Uji lift</th>
+                <th>Korelasi rule</th>
                 <th></th>
                 </tr>
                 <?php
                     $no=1;
-                    while($row=$db_object->db_fetch_array($query)){
+                    //while($row=$db_object->db_fetch_array($query)){
+                    foreach($data_confidence as $key => $val){
                         if($no==1){
-                            echo "Min support: ".$row['min_support'];
                             echo "<br>";
-                            echo "Min confidence: ".$row['min_confidence'];
+                            echo "Min support: ".$val['min_support'];
                             echo "<br>";
-                            echo "Start Date: ".format_date_db($row['start_date']);
+                            echo "Min confidence: ".$val['min_confidence'];
                             echo "<br>";
-                            echo "End Date: ".format_date_db($row['end_date']);
+                            echo "Start Date: ".format_date_db($val['start_date']);
+                            echo "<br>";
+                            echo "End Date: ".format_date_db($val['end_date']);
                         }
-                        $kom1 = explode(" , ",$row['kombinasi1']);
-                        $jika = implode(" Dan ", $kom1);
-                        $kom2 = explode(" , ",$row['kombinasi2']);
-                        $maka = implode(" Dan ", $kom2);
-                            echo "<tr>";
-                            echo "<td>".$no."</td>";
-                            echo "<td>Jika ".$jika.", Maka ".$maka."</td>";
-                            echo "<td>".price_format($row['confidence'])."</td>";
-                            echo "<td>".($row['lolos']==1?"Lolos":"Tidak Lolos")."</td>";
+                        echo "<tr>";
+                        echo "<td>" . $no . "</td>";
+                        echo "<td>" . $val['kombinasi1']." => ".$val['kombinasi2'] . "</td>";
+                        echo "<td>" . price_format($val['confidence']) . "</td>";
+                        echo "<td>" . price_format($val['nilai_uji_lift']) . "</td>";
+                        echo "<td>" . ($val['korelasi_rule']) . "</td>";
+                        echo "<td>" . ($val['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
                         echo "</tr>";
                         $no++;
                     }
