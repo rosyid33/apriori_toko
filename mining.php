@@ -303,46 +303,46 @@ function get_variasi_itemset3($array_itemset3, $item1, $item2, $item3, $item4) {
     $return = array();
     
     $return1 = array();
-    if(!in_array($return1, $item1)){
+    if(!in_array($item1, $return1)){
         $return1[] = $item1;
     }
-    if(!in_array($return1, $item2)){
+    if(!in_array($item2, $return1)){
         $return1[] = $item2;
     }
-    if(!in_array($return1, $item3)){
+    if(!in_array($item3, $return1)){
         $return1[] = $item3;
     }
     
     $return2 = array();
-    if(!in_array($return2, $item1)){
+    if(!in_array($item1, $return2)){
         $return2[] = $item1;
     }
-    if(!in_array($return2, $item2)){
+    if(!in_array($item2, $return2)){
         $return2[] = $item2;
     }
-    if(!in_array($return2, $item4)){
+    if(!in_array($item4, $return2)){
         $return2[] = $item4;
     }
     
     $return3 = array();
-    if(!in_array($return3, $item1)){
+    if(!in_array($item1, $return3)){
         $return3[] = $item1;
     }
-    if(!in_array($return3, $item3)){
+    if(!in_array($item3, $return3)){
         $return3[] = $item3;
     }
-    if(!in_array($return3, $item4)){
+    if(!in_array($item4, $return3)){
         $return3[] = $item4;
     }
     
     $return4 = array();
-    if(!in_array($return4, $item2)){
+    if(!in_array($item2, $return4)){
         $return4[] = $item2;
     }
-    if(!in_array($return4, $item3)){
+    if(!in_array($item3, $return4)){
         $return4[] = $item3;
     }
-    if(!in_array($return4, $item4)){
+    if(!in_array($item4, $return4)){
         $return4[] = $item4;
     }
     
@@ -440,7 +440,7 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
             . " AND atribut2 = '".$atribut2."' "
             . " AND id_process = ".$id_process;
     $res1_ = $db_object->db_query($sql1_);
-    while($row1_ = $db_object->db_fetch($res1_)){
+    while($row1_ = $db_object->db_fetch_array($res1_)){
         $kombinasi1 = $atribut1." , ".$atribut2;
         $kombinasi2 = $atribut3;
         $supp_x = $row1_['support'];
@@ -496,7 +496,7 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
                 . " WHERE atribut = '".$atribut1."' "
                 . " AND id_process = ".$id_process;
         $res4_ = $db_object->db_query($sql4_);
-        while($row4_ = $db_object->db_fetch($res4_)){
+        while($row4_ = $db_object->db_fetch_array($res4_)){
             $kombinasi1 = $atribut1;
             $kombinasi2 = $atribut2." , ".$atribut3;
             $supp_x = $row4_['support'];
