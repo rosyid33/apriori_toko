@@ -87,7 +87,7 @@ $jumlah=$db_object->db_num_rows($query);
                 <th>Confidence</th>
                 <th>Nilai Uji lift</th>
                 <th>Korelasi rule</th>
-                <th></th>
+                <!--<th></th>-->
                 </tr>
                 <?php
                     $no=1;
@@ -109,11 +109,27 @@ $jumlah=$db_object->db_num_rows($query);
                         echo "<td>" . price_format($val['confidence']) . "</td>";
                         echo "<td>" . price_format($val['nilai_uji_lift']) . "</td>";
                         echo "<td>" . ($val['korelasi_rule']) . "</td>";
-                        echo "<td>" . ($val['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+                        //echo "<td>" . ($val['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
                         echo "</tr>";
                         $no++;
                     }
                     ?>
+            </table>
+            <h2>Hasil Analisa</h2>
+            <table class='table table-bordered table-striped  table-hover'>
+                <?php
+                $no=1;
+                //while($row=$db_object->db_fetch_array($query)){
+                foreach($data_confidence as $key => $val){
+                    if($val['lolos']==1){
+                        echo "<tr>";
+                        echo "<td>".$no.". Jika konsumen membeli ".$val['kombinasi1']
+                                .", maka konsumen juga akan membeli ".$val['kombinasi2']."</td>";
+                        echo "</tr>";
+                    }
+                    $no++;
+                }
+                ?>
             </table>
             
             <?php
@@ -128,6 +144,7 @@ $jumlah=$db_object->db_num_rows($query);
             $jumlah1=$db_object->db_num_rows($query1);
             ?>
             <hr>
+            <h3>Perhitungan</h3>
             <strong>Itemset 1:</strong></br>
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
