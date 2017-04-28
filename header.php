@@ -40,9 +40,13 @@ if(isset($_GET['menu'])){
                         <?php 
                         }
                         else{
+                            if($_SESSION['apriori_toko_level']==1){
                         ?>
                             <li <?php echo ($menu=='data_transaksi')?"class='active'":""; ?> ><a href="index.php?menu=data_transaksi">Data Transaksi</a></li>
                             <li <?php echo ($menu=='proses_apriori')?"class='active'":""; ?>><a href="index.php?menu=proses_apriori">Proses Apriori</a></li>
+                            <?php
+                            }
+                            ?>
                             <li <?php echo ($menu=='hasil_rule')?"class='active'":""; ?>><a href="index.php?menu=hasil_rule">Hasil Rule</a></li>
                             <li ><a href="logout.php">Logout</a></li>
                         <?php

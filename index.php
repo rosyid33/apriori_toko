@@ -14,7 +14,7 @@ if (!isset($_SESSION['apriori_toko_id']) &&
         ($menu != '' & $menu != 'home' & $menu != 'tentang' & $menu != 'not_found' & $menu != 'forbidden')) {
     header("location:login.php");
 }
-
+include_once 'fungsi.php';
 //include 'koneksi.php';
 ?>
 
@@ -70,10 +70,15 @@ if (!isset($_SESSION['apriori_toko_id']) &&
 
 
         if ($menu != '') {
-            if (file_exists($menu.".php")) {
-                include $menu.'.php';
-            } else {
-                include "not_found.php";
+            if(can_access_menu($menu)){
+                if (file_exists($menu.".php")) {
+                    include $menu.'.php';
+                } else {
+                    include "not_found.php";
+                }
+            }
+            else{
+                include "forbidden.php";
             }
         } else {
             include "home.php";

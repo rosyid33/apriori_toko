@@ -1,6 +1,14 @@
 <?php
 
-
+function can_access_menu($menu){
+    if($_SESSION['apriori_toko_level']==2 & ($menu=='hasil_rule' || $menu=='view_rule')){
+        return true;
+    }
+    if($_SESSION['apriori_toko_level']==1){
+        return true;
+    }
+    return false;
+}
 //START USERS===================================================================
 /**
  * combobox list users dengan text didepannya (for input form)

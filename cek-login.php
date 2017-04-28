@@ -20,7 +20,7 @@ if ($num_rows > 0) {
         unset($_POST); // hapus post form
         $_SESSION['apriori_toko_id'] = $rows['id']; // mengisi session
         $_SESSION['apriori_toko_username'] = $rows['username'];
-        $_SESSION['apriori_toko_level'] = $rows['id_priv'];
+        $_SESSION['apriori_toko_level'] = $rows['level'];
 
         $level_name = ($_SESSION['apriori_toko_level']==1)?"admin":"kepala";
         $_SESSION['apriori_toko_level_name'] = $level_name;
