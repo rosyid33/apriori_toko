@@ -130,7 +130,7 @@ function display_process_hasil_mining($db_object, $id_process) {
             <th>Confidence</th>
             <th>Nilai Uji lift</th>
             <th>Korelasi rule</th>
-            <th></th>
+            <!-- <th></th> -->
         </tr>
         <?php
         
@@ -147,7 +147,7 @@ function display_process_hasil_mining($db_object, $id_process) {
             echo "<td>" . price_format($val['confidence']) . "</td>";
             echo "<td>" . price_format($val['nilai_uji_lift']) . "</td>";
             echo "<td>" . ($val['korelasi_rule']) . "</td>";
-            echo "<td>" . ($val['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
+            //echo "<td>" . ($val['lolos'] == 1 ? "Lolos" : "Tidak Lolos") . "</td>";
             echo "</tr>";
             $no++;
         }
