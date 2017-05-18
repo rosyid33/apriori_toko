@@ -74,7 +74,9 @@ $jumlah=$db_object->db_num_rows($query);
                             echo "<td>".price_format($row['confidence'])."</td>";
                         echo "</tr>";
                         $no++;
+                        if($row['confidence']>=$row['min_cofidence']){
                         $data_confidence[] = $row;
+                        }
                     }
                     ?>
             </table>

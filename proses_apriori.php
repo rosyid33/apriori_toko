@@ -57,6 +57,22 @@ if (isset($_POST['submit'])) {
                     $tgl = explode(" - ", $_POST['range_tanggal']);
                     $start = format_date($tgl[0]);
                     $end = format_date($tgl[1]);
+                    
+                    echo "Min Support Absolut: " . $_POST['min_support'];
+                    echo "<br>";
+                    $sql = "SELECT COUNT(*) FROM transaksi 
+                    WHERE transaction_date BETWEEN '$start' AND '$end' ";
+                    $res = $db_object->db_query($sql);
+                    $num = $db_object->db_fetch_array($res);
+                    $minSupportRelatif = ($_POST['min_support']/$num[0]) * 100;
+                    echo "Min Support Relatif: " . $minSupportRelatif;
+                    echo "<br>";
+                    echo "Min Confidence: " . $_POST['min_confidence'];
+                    echo "<br>";
+                    echo "Start Date: " . $_POST['range_tanggal'];
+                    echo "<br>";
+                    
+                    
 
                     //insert log process
                     $field_value = array(
@@ -75,12 +91,7 @@ if (isset($_POST['submit'])) {
                     } else {
                         display_error("Gagal mendapatkan aturan asosiasi");
                     }
-                    echo "Min Support: " . $_POST['min_support'];
-                    echo "<br>";
-                    echo "Min Confidence: " . $_POST['min_confidence'];
-                    echo "<br>";
-                    echo "Start Date: " . $_POST['range_tanggal'];
-                    echo "<br>";
+                    
                     display_process_hasil_mining($db_object, $id_process);
                 }
                 ?>

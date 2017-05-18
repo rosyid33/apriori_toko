@@ -19,14 +19,44 @@ function reset_temporary($db_object){
 }
 
 function is_exist_variasi_itemset($array_item1, $array_item2, $item1, $item2) {
-    $return = true;
-
-    $bool1 = in_array($item2, $array_item1);
-    $bool2 = in_array($item1, $array_item2);
-    if (!$bool1 || !$bool2) {
-        $return = false;
+    //$return = true;
+    
+//    $bool1 = array_search(strtoupper($item2), array_map('strtoupper', $array_item1));
+//    $bool2 = array_search(strtoupper($item1), array_map('strtoupper', $array_item2));
+//    $bool3 = array_search(strtoupper($item2), array_map('strtoupper', $array_item2));
+//    $bool4 = array_search(strtoupper($item1), array_map('strtoupper', $array_item1));
+    $bool1 = array_keys(array_map('strtoupper', $array_item1), strtoupper($item1));
+    $bool2 = array_keys(array_map('strtoupper', $array_item2), strtoupper($item2));
+    $bool3 = array_keys(array_map('strtoupper', $array_item2), strtoupper($item1));
+    $bool4 = array_keys(array_map('strtoupper', $array_item1), strtoupper($item2));
+    
+    foreach ($bool1 as $key => $value) {
+        $aa = array_search($value, $bool2);
+        if(is_numeric($aa)){
+            return true;
+        }
     }
-    return $return;
+    
+    foreach ($bool3 as $key => $value) {
+        $aa = array_search($value, $bool4);
+        if(is_numeric($aa)){
+            return true;
+        }
+    }
+    
+//    if (is_numeric($bool1) && is_numeric($bool2) || is_numeric($bool3) && is_numeric($bool4)){
+//        if($bool1 === $bool2 || $bool3 === $bool4){
+//            return true;
+//        }
+//    }
+    
+//    if (($bool3) && ($bool4)){
+//        if($bool3 == $bool4){//jika ditemukan dengan idex yg sama
+//            return true;
+//        }
+//    }
+    
+    return false;
 }
 
 
@@ -40,6 +70,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     $result_trans = $db_object->db_query($sql_trans);
     $dataTransaksi = $item_list = array();
     $jumlah_transaksi = $db_object->db_num_rows($result_trans);
+    $min_support_relative = ($min_support/$jumlah_transaksi)*100; 
     $x=0;
     while($myrow = $db_object->db_fetch_array($result_trans)){
         $dataTransaksi[$x]['tanggal'] = $myrow['transaction_date'];
@@ -47,7 +78,8 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
         $produk = explode(",", $myrow['produk']);
         //all items
         foreach ($produk as $key => $value_produk) {
-            if(!in_array($value_produk, $item_list)){
+            //if(!in_array($value_produk, $item_list)){
+            if(!in_array(strtoupper($value_produk), array_map('strtoupper', $item_list))){
                 if(!empty($value_produk)){
                     $item_list[] = $value_produk;
                 }
@@ -70,7 +102,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     foreach ($item_list as $key => $item) {
         $jumlah = jumlah_itemset1($dataTransaksi, $item);
         $support = ($jumlah/$jumlah_transaksi) * 100;
-        $lolos = ($support>=$min_support)?"1":"0";
+        $lolos = ($support>=$min_support_relative)?"1":"0";
         $valueIn[] = "('$item','$jumlah','$support','$lolos','$id_process')";
         if($lolos){
             $itemset1[] = $item;//item yg lolos itemset1
@@ -119,7 +151,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                         $NilaiAtribut2[] = $variance2;
 
                         $support2 = ($jml_itemset2/$jumlah_transaksi) * 100;
-                        $lolos = ($support2 >= $min_support)? 1:0;
+                        $lolos = ($support2 >= $min_support_relative)? 1:0;
                         
                         $valueIn_itemset2[] = "('$variance1','$variance2','$jml_itemset2','$support2','$lolos','$id_process')";
                         if($lolos){
@@ -173,6 +205,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                 $itemset2b = $itemset2_var2[$b];
 
                 if (!empty($itemset1a) && !empty($itemset1b)&& !empty($itemset2a) && !empty($itemset2b)) {
+                    
                     $temp_array = get_variasi_itemset3($tigaVariasiItem, 
                             $itemset1a, $itemset1b, $itemset2a, $itemset2b);
                     
@@ -201,7 +234,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                             //$jml_itemset3 = get_count_itemset3($db_object, $itemset1, $itemset2, $itemset3, $start_date, $end_date);
                             $jml_itemset3 = jumlah_itemset3($dataTransaksi, $itemset1, $itemset2, $itemset3);
                             $support3 = ($jml_itemset3/$jumlah_transaksi) * 100;
-                            $lolos = ($support3 >= $min_support)? 1:0;
+                            $lolos = ($support3 >= $min_support_relative)? 1:0;
                             
                             $valueIn_itemset3[] = "('$itemset1','$itemset2','$itemset3','$jml_itemset3','$support3','$lolos','$id_process')";
                             
@@ -303,46 +336,46 @@ function get_variasi_itemset3($array_itemset3, $item1, $item2, $item3, $item4) {
     $return = array();
     
     $return1 = array();
-    if(!in_array($item1, $return1)){
+    if(!in_array(strtoupper($item1), array_map('strtoupper', $return1))){
         $return1[] = $item1;
     }
-    if(!in_array($item2, $return1)){
+    if(!in_array(strtoupper($item2), array_map('strtoupper', $return1))){
         $return1[] = $item2;
     }
-    if(!in_array($item3, $return1)){
+    if(!in_array(strtoupper($item3), array_map('strtoupper', $return1))){
         $return1[] = $item3;
     }
     
     $return2 = array();
-    if(!in_array($item1, $return2)){
+    if(!in_array(strtoupper($item1), array_map('strtoupper', $return2))){
         $return2[] = $item1;
     }
-    if(!in_array($item2, $return2)){
+    if(!in_array(strtoupper($item2), array_map('strtoupper', $return2))){
         $return2[] = $item2;
     }
-    if(!in_array($item4, $return2)){
+    if(!in_array(strtoupper($item4), array_map('strtoupper', $return2))){
         $return2[] = $item4;
     }
     
     $return3 = array();
-    if(!in_array($item1, $return3)){
+    if(!in_array(strtoupper($item1), array_map('strtoupper', $return3))){
         $return3[] = $item1;
     }
-    if(!in_array($item3, $return3)){
+    if(!in_array(strtoupper($item3), array_map('strtoupper', $return3))){
         $return3[] = $item3;
     }
-    if(!in_array($item4, $return3)){
+    if(!in_array(strtoupper($item4), array_map('strtoupper', $return3))){
         $return3[] = $item4;
     }
     
     $return4 = array();
-    if(!in_array($item2, $return4)){
+    if(!in_array(strtoupper($item2), array_map('strtoupper', $return4))){
         $return4[] = $item2;
     }
-    if(!in_array($item3, $return4)){
+    if(!in_array(strtoupper($item3), array_map('strtoupper', $return4))){
         $return4[] = $item3;
     }
-    if(!in_array($item4, $return4)){
+    if(!in_array(strtoupper($item4), array_map('strtoupper', $return4))){
         $return4[] = $item4;
     }
     
@@ -384,7 +417,7 @@ function is_exist_variasi_on_itemset3($array, $tiga_variasi){
         $jml=0;
         foreach ($value as $key1 => $val1) {
             foreach ($tiga_variasi as $key2 => $val2) {
-                if($val1 == $val2){
+                if(strtoupper($val1) == strtoupper($val2)){
                     $jml++;
                 }
             }
@@ -511,7 +544,7 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
             $jumlah_kemunculanA = jumlah_itemset1($dataTransaksi, $atribut1);
             $jumlah_kemunculanB = jumlah_itemset2($dataTransaksi, $atribut2, $atribut3);
 
-            $nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+            $nilai_uji_lift = $PAUB / ($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi);
             $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
             if($nilai_uji_lift==1){
                 $korelasi_rule = "tidak ada korelasi";
@@ -557,7 +590,7 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
             $jumlah_kemunculanA = jumlah_itemset1($dataTransaksi, $atribut1);
             $jumlah_kemunculanB = jumlah_itemset1($dataTransaksi, $atribut2);
 
-            $nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+            $nilai_uji_lift = $PAUB / ($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi);
             $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
             if($nilai_uji_lift==1){
                 $korelasi_rule = "tidak ada korelasi";
@@ -584,8 +617,8 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
 function jumlah_itemset1($transaksi_list, $produk){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
-        $items = $data['produk'];
-        $pos = strpos($items, $produk.",");
+        $items = strtoupper($data['produk']);
+        $pos = strpos($items, strtoupper($produk).",");
         if($pos!==false){//was found at position $pos
             $count++;
         }
@@ -596,9 +629,9 @@ function jumlah_itemset1($transaksi_list, $produk){
 function jumlah_itemset2($transaksi_list, $variasi1, $variasi2){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
-        $items = $data['produk'];
-        $pos1 = strpos($items, $variasi1.",");
-        $pos2 = strpos($items, $variasi2.",");
+        $items = strtoupper($data['produk']);
+        $pos1 = strpos($items, strtoupper($variasi1).",");
+        $pos2 = strpos($items, strtoupper($variasi2).",");
         if($pos1!==false && $pos2!==false){//was found at position $pos
             $count++;
         }
@@ -609,10 +642,10 @@ function jumlah_itemset2($transaksi_list, $variasi1, $variasi2){
 function jumlah_itemset3($transaksi_list, $variasi1, $variasi2, $variasi3){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
-        $items = $data['produk'];
-        $pos1 = strpos($items, $variasi1.",");
-        $pos2 = strpos($items, $variasi2.",");
-        $pos3 = strpos($items, $variasi3.",");
+        $items = strtoupper($data['produk']);
+        $pos1 = strpos($items, strtoupper($variasi1).",");
+        $pos2 = strpos($items, strtoupper($variasi2).",");
+        $pos3 = strpos($items, strtoupper($variasi3).",");
         if($pos1!==false && $pos2!==false && $pos3!==false){//was found at position $pos
             $count++;
         }
