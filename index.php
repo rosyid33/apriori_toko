@@ -99,8 +99,8 @@ include_once 'fungsi.php';
             //<![CDATA[
             $(window).load(function () { // makes sure the whole site is loaded
                 $('.loader-item').fadeOut(); // will first fade out the loading animation
-                $('#pageloader').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
-                $('body').delay(350).css({'overflow-y': 'visible'});
+                $('#pageloader').delay(3).fadeOut('slow'); // will fade out the white DIV that covers the website.
+                $('body').delay(3).css({'overflow-y': 'visible'});
             })
             //]]>
         </script>

@@ -488,7 +488,8 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
         $jumlah_kemunculanA = jumlah_itemset2($dataTransaksi, $atribut1, $atribut2);
         $jumlah_kemunculanB = jumlah_itemset1($dataTransaksi, $atribut3);
         
-        $nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+        //$nilai_uji_lift = $PAUB / $jumlah_kemunculanA * $jumlah_kemunculanB;
+        $nilai_uji_lift = $PAUB / (($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi));
         $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
         if($nilai_uji_lift==1){
             $korelasi_rule = "tidak ada korelasi";
@@ -506,7 +507,13 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
                     "min_confidence" => $min_confidence,
                     "nilai_uji_lift" => $nilai_uji_lift,
                     "korelasi_rule" => $korelasi_rule,
-                    "id_process" => $id_process
+                    "id_process" => $id_process,
+                    "jumlah_a" => $jumlah_kemunculanA,
+                    "jumlah_b" => $jumlah_kemunculanB,
+                    "jumlah_ab" => $jumlah_kemunculanAB,
+                    "px" => ($jumlah_kemunculanA/$jumlah_transaksi),
+                    "py" => ($jumlah_kemunculanB/$jumlah_transaksi),
+                    "pxuy" => $PAUB
                 ));
     }
 }
@@ -544,7 +551,7 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
             $jumlah_kemunculanA = jumlah_itemset1($dataTransaksi, $atribut1);
             $jumlah_kemunculanB = jumlah_itemset2($dataTransaksi, $atribut2, $atribut3);
 
-            $nilai_uji_lift = $PAUB / ($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi);
+            $nilai_uji_lift = $PAUB / (($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi));
             $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
             if($nilai_uji_lift==1){
                 $korelasi_rule = "tidak ada korelasi";
@@ -563,7 +570,13 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
                         "min_confidence" => $min_confidence,
                         "nilai_uji_lift" => $nilai_uji_lift,
                         "korelasi_rule" => $korelasi_rule,
-                        "id_process" => $id_process
+                        "id_process" => $id_process,
+                        "jumlah_a" => $jumlah_kemunculanA,
+                        "jumlah_b" => $jumlah_kemunculanB,
+                        "jumlah_ab" => $jumlah_kemunculanAB,
+                        "px" => ($jumlah_kemunculanA/$jumlah_transaksi),
+                        "py" => ($jumlah_kemunculanB/$jumlah_transaksi),
+                        "pxuy" => $PAUB
                     ));
         }
 }
@@ -590,7 +603,7 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
             $jumlah_kemunculanA = jumlah_itemset1($dataTransaksi, $atribut1);
             $jumlah_kemunculanB = jumlah_itemset1($dataTransaksi, $atribut2);
 
-            $nilai_uji_lift = $PAUB / ($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi);
+            $nilai_uji_lift = $PAUB / (($jumlah_kemunculanA/$jumlah_transaksi) * ($jumlah_kemunculanB/$jumlah_transaksi));
             $korelasi_rule = ($nilai_uji_lift<1)?"korelasi negatif":"korelasi positif";
             if($nilai_uji_lift==1){
                 $korelasi_rule = "tidak ada korelasi";
@@ -608,7 +621,13 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
                         "min_confidence" => $min_confidence,
                         "nilai_uji_lift" => $nilai_uji_lift,
                         "korelasi_rule" => $korelasi_rule,
-                        "id_process" => $id_process
+                        "id_process" => $id_process,
+                        "jumlah_a" => $jumlah_kemunculanA,
+                        "jumlah_b" => $jumlah_kemunculanB,
+                        "jumlah_ab" => $jumlah_kemunculanAB,
+                        "px" => ($jumlah_kemunculanA/$jumlah_transaksi),
+                        "py" => ($jumlah_kemunculanB/$jumlah_transaksi),
+                        "pxuy" => $PAUB
                     ));
         }
 }
