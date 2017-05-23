@@ -62,6 +62,7 @@ $jumlah=$db_object->db_num_rows($query);
                 <th>Support X U Y</th>
                 <th>Support X </th>
                 <th>Confidence</th>
+                <th></th>
                 </tr>
                 <?php
                     $no=1;
@@ -72,9 +73,12 @@ $jumlah=$db_object->db_num_rows($query);
                             echo "<td>".price_format($row['support_xUy'])."</td>";
                             echo "<td>".price_format($row['support_x'])."</td>";
                             echo "<td>".price_format($row['confidence'])."</td>";
+                            $keterangan = ($row['confidence'] <= $row['min_confidence'])?"Tidak Lolos":"Lolos";
+                            echo "<td>".$keterangan."</td>";
                         echo "</tr>";
                         $no++;
-                        if($row['confidence']>=$row['min_cofidence']){
+                        //if($row['confidence']>=$row['min_cofidence']){
+                        if($row['lolos']==1){
                         $data_confidence[] = $row;
                         }
                     }

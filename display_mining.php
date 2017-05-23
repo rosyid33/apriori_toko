@@ -105,6 +105,7 @@ function display_process_hasil_mining($db_object, $id_process) {
         <th>Support X U Y</th>
         <th>Support X </th>
         <th>Confidence</th>
+        <th>Keterangan</th>
         </tr>
         <?php
             $no=1;
@@ -115,9 +116,13 @@ function display_process_hasil_mining($db_object, $id_process) {
                     echo "<td>".price_format($row['support_xUy'])."</td>";
                     echo "<td>".price_format($row['support_x'])."</td>";
                     echo "<td>".price_format($row['confidence'])."</td>";
+                    $keterangan = ($row['confidence'] <= $row['min_confidence'])?"Tidak Lolos":"Lolos";
+                    echo "<td>".$keterangan."</td>";
                 echo "</tr>";
                 $no++;
+                if($row['lolos']==1){
                 $data_confidence[] = $row;
+                }
             }
             ?>
     </table>
