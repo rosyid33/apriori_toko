@@ -73,6 +73,54 @@ if (isset($_POST['submit'])) {
                     echo "<br>";
                     
                     
+                    //get  transaksi data to array variable
+//                    $sql_trans = "SELECT * FROM transaksi 
+//                            WHERE transaction_date BETWEEN '$start' AND '$end' ";
+//                    $result_trans = $db_object->db_query($sql_trans);
+//                    $dataTransaksi = $item_list = array();
+//                    $jumlah_transaksi = $db_object->db_num_rows($result_trans);
+//                    $min_support_relative = ($min_support/$jumlah_transaksi)*100; 
+//                    $x=0;
+//                    while($myrow = $db_object->db_fetch_array($result_trans)){
+//                        $dataTransaksi[$x]['tanggal'] = $myrow['transaction_date'];
+//                        $dataTransaksi[$x]['produk'] = $myrow['produk'].",";
+//                        $dataTransaksi[$x]['id'] = $myrow['id'];
+//                        $produk = explode(",", $myrow['produk']);
+//                        $produk = str_replace(" ,", ",", $produk);
+//                        $produk = str_replace("  ,", ",", $produk);
+//                        $produk = str_replace("   ,", ",", $produk);
+//                        $produk = str_replace("    ,", ",", $produk);
+//                        $produk = str_replace(", ", ",", $produk);
+//                        $produk = str_replace(",  ", ",", $produk);
+//                        $produk = str_replace(",   ", ",", $produk);
+//                        $produk = str_replace(",    ", ",", $produk);
+//                        //all items
+//                        foreach ($produk as $key => $value_produk) {
+//                            //if(!in_array($value_produk, $item_list)){
+//                            if(!in_array(strtoupper($value_produk), array_map('strtoupper', $item_list))){
+//                                if(!empty($value_produk)){
+//                                    $item_list[] = $value_produk;
+//                                }
+//                            }
+//                        }
+//                        $x++;
+//                    }
+//                    
+//                    
+//                    $sql_trans = "SELECT * FROM itemset2 ";
+//                    $result_trans = $db_object->db_query($sql_trans);
+//                    while($myrow = $db_object->db_fetch_array($result_trans)){
+//                        if($myrow['atribut1']=='bendera cair coklat botol' 
+//                                && $myrow['atribut2']=='cair coklat kotak'){
+//                            $aaaaa="jjjjj";
+//                        }
+//                        $jumlahItemset2[] = jumlah_itemset2($dataTransaksi, $myrow['atribut1'], $myrow['atribut2']);
+//                        
+//                    }
+//                    echo "aaa";
+                    
+                    
+                    
 
                     //insert log process
                     $field_value = array(

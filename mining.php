@@ -74,7 +74,18 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     $x=0;
     while($myrow = $db_object->db_fetch_array($result_trans)){
         $dataTransaksi[$x]['tanggal'] = $myrow['transaction_date'];
-        $dataTransaksi[$x]['produk'] = $myrow['produk'].",";
+        $item_produk = $myrow['produk'].",";
+        //mencegah ada jarak spasi
+        $item_produk = str_replace(" ,", ",", $item_produk);
+        $item_produk = str_replace("  ,", ",", $item_produk);
+        $item_produk = str_replace("   ,", ",", $item_produk);
+        $item_produk = str_replace("    ,", ",", $item_produk);
+        $item_produk = str_replace(", ", ",", $item_produk);
+        $item_produk = str_replace(",  ", ",", $item_produk);
+        $item_produk = str_replace(",   ", ",", $item_produk);
+        $item_produk = str_replace(",    ", ",", $item_produk);
+        
+        $dataTransaksi[$x]['produk'] = $item_produk;
         $produk = explode(",", $myrow['produk']);
         //all items
         foreach ($produk as $key => $value_produk) {
@@ -649,8 +660,11 @@ function jumlah_itemset2($transaksi_list, $variasi1, $variasi2){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
         $items = strtoupper($data['produk']);
-        $pos1 = strpos($items, strtoupper($variasi1).",");
-        $pos2 = strpos($items, strtoupper($variasi2).",");
+        $item_variasi1 = strtoupper($variasi1).",";
+        $item_variasi2 = strtoupper($variasi2).",";
+        
+        $pos1 = strpos($items, $item_variasi1);
+        $pos2 = strpos($items, $item_variasi2);
         if($pos1!==false && $pos2!==false){//was found at position $pos
             $count++;
         }
