@@ -109,7 +109,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                 <th>Suppport</th>
                 <th></th>
             </tr>";
-    $itemset1 = $valueIn = array();
+    $itemset1 = $jumlahItemset1 = $supportItemset1 = $valueIn = array();
     foreach ($item_list as $key => $item) {
         $jumlah = jumlah_itemset1($dataTransaksi, $item);
         $support = ($jumlah/$jumlah_transaksi) * 100;
@@ -117,6 +117,8 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
         $valueIn[] = "('$item','$jumlah','$support','$lolos','$id_process')";
         if($lolos){
             $itemset1[] = $item;//item yg lolos itemset1
+            $jumlahItemset1[] = $jumlah;
+            $supportItemset1[] = $support;
         }
         echo "<tr>";
         echo "<td>" . $item . "</td>";
@@ -132,6 +134,23 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             . " VALUES ".$value_insert;
     $db_object->db_query($sql_insert_itemset1);
     
+    //display itemset yg lolos
+    echo "<br><strong>Itemset 1 yang lolos:</strong><br>";
+    echo "<table class='table table-bordered table-striped  table-hover'>
+            <tr>
+                <th>Item</th>
+                <th>Jumlah</th>
+                <th>Suppport</th>
+            </tr>";
+    foreach ($itemset1 as $key => $value) {
+        echo "<tr>";
+        echo "<td>" . $value . "</td>";
+        echo "<td>" . $jumlahItemset1[$key] . "</td>";
+        echo "<td>" . $supportItemset1[$key] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    
     
     //build itemset2
     echo "<br><strong>Itemset 2:</strong><br>";
@@ -144,7 +163,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                 <th></th>
             </tr>";
     $NilaiAtribut1 = $NilaiAtribut2 = array();
-    $itemset2_var1 = $itemset2_var2 = array();
+    $itemset2_var1 = $itemset2_var2 = $jumlahItemset2 = $supportItemset2 = array();
     $valueIn_itemset2 = array();
     $no=1;
     $a = 0;
@@ -168,6 +187,8 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                         if($lolos){
                             $itemset2_var1[] = $variance1;
                             $itemset2_var2[] = $variance2;
+                            $jumlahItemset2[] = $jml_itemset2;
+                            $supportItemset2[] = $support2;
                         }
                         echo "<tr>";
                         echo "<td>" . $variance1 . "</td>";
@@ -190,6 +211,24 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             . " VALUES ".$value_insert_itemset2;
     $db_object->db_query($sql_insert_itemset2);
     
+    //display itemset yg lolos
+    echo "<br><strong>Itemset 2 yang lolos:</strong><br>";
+    echo "<table class='table table-bordered table-striped  table-hover'>
+            <tr>
+                <th>Item 1</th>
+                <th>Item 2</th>
+                <th>Jumlah</th>
+                <th>Suppport</th>
+            </tr>";
+    foreach ($itemset2_var1 as $key => $value) {
+        echo "<tr>";
+        echo "<td>" . $value . "</td>";
+        echo "<td>" . $itemset2_var2[$key] . "</td>";
+        echo "<td>" . $jumlahItemset2[$key] . "</td>";
+        echo "<td>" . $supportItemset2[$key] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
     
     //build itemset3
     echo "<br><strong>Itemset 3:</strong><br>";
@@ -204,6 +243,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             </tr>";
     $a = 0;
     $tigaVariasiItem = $valueIn_itemset3 =  array();
+    $itemset3_var1 = $itemset3_var2 = $itemset3_var3 = $jumlahItemset3 = $supportItemset3 = array();
     $no=1;
     while ($a <= count($itemset2_var1)) {
         $b = 0;
@@ -249,6 +289,14 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                             
                             $valueIn_itemset3[] = "('$itemset1','$itemset2','$itemset3','$jml_itemset3','$support3','$lolos','$id_process')";
                             
+                            if($lolos){
+                                $itemset3_var1[] = $itemset1;
+                                $itemset3_var2[] = $itemset2;
+                                $itemset3_var3[] = $itemset3;
+                                $jumlahItemset3[] = $jml_itemset3;
+                                $supportItemset3[] = $support3;
+                            }
+                        
                             echo "<tr>";
                             echo "<td>" . $itemset1 . "</td>";
                             echo "<td>" . $itemset2 . "</td>";
@@ -272,6 +320,27 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     $sql_insert_itemset3 = "INSERT INTO itemset3(atribut1, atribut2, atribut3, jumlah, support, lolos, id_process) "
             . " VALUES ".$value_insert_itemset3;
     $db_object->db_query($sql_insert_itemset3);
+    
+    //display itemset yg lolos
+    echo "<br><strong>Itemset 3 yang lolos:</strong><br>";
+    echo "<table class='table table-bordered table-striped  table-hover'>
+            <tr>
+                <th>Item 1</th>
+                <th>Item 2</th>
+                <th>Item 3</th>
+                <th>Jumlah</th>
+                <th>Suppport</th>
+            </tr>";
+    foreach ($itemset3_var1 as $key => $value) {
+        echo "<tr>";
+        echo "<td>" . $value . "</td>";
+        echo "<td>" . $itemset3_var2[$key] . "</td>";
+        echo "<td>" . $itemset3_var3[$key] . "</td>";
+        echo "<td>" . $jumlahItemset3[$key] . "</td>";
+        echo "<td>" . $supportItemset3[$key] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
     
 
     //hitung confidence
@@ -524,7 +593,8 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
                     "jumlah_ab" => $jumlah_kemunculanAB,
                     "px" => ($jumlah_kemunculanA/$jumlah_transaksi),
                     "py" => ($jumlah_kemunculanB/$jumlah_transaksi),
-                    "pxuy" => $PAUB
+                    "pxuy" => $PAUB,
+                    "from_itemset"=>3
                 ));
     }
 }
@@ -587,7 +657,8 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
                         "jumlah_ab" => $jumlah_kemunculanAB,
                         "px" => ($jumlah_kemunculanA/$jumlah_transaksi),
                         "py" => ($jumlah_kemunculanB/$jumlah_transaksi),
-                        "pxuy" => $PAUB
+                        "pxuy" => $PAUB,
+                        "from_itemset"=>3
                     ));
         }
 }
@@ -638,7 +709,8 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
                         "jumlah_ab" => $jumlah_kemunculanAB,
                         "px" => ($jumlah_kemunculanA/$jumlah_transaksi),
                         "py" => ($jumlah_kemunculanB/$jumlah_transaksi),
-                        "pxuy" => $PAUB
+                        "pxuy" => $PAUB,
+                        "from_itemset"=>2
                     ));
         }
 }
