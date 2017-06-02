@@ -70,7 +70,7 @@ $jumlah1=$db_object->db_num_rows($query1);
             }
             else{
             ?>
-            Confidence dari itemset 3
+            
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
                 <th>X => Y</th>
@@ -83,6 +83,13 @@ $jumlah1=$db_object->db_num_rows($query1);
                     $no=1;
                     $data_confidence = array();
                     while($row=$db_object->db_fetch_array($query)){
+                        if($no==1){
+                        echo "<br>";
+                        echo "Tanggal: ".format_date_db($row['start_date'])." s/d ".format_date_db($row['end_date'])."<br>";
+                        echo "Min Suppport: ".$row['min_support']."<br>";
+                        echo "Min Confidence: ".$row['min_confidence']."<br><br>";
+                        echo "Confidence dari itemset 3";
+                    }
                             echo "<tr>";
                             echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
                             echo "<td>".price_format($row['support_xUy'])."</td>";
