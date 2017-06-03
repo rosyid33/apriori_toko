@@ -18,6 +18,20 @@ function reset_temporary($db_object){
     $db_object->db_query($sql4);
 }
 
+function reset_hitungan($db_object, $id_process){
+    $condition = array("id_process"=>$id_process);
+    $db_object->delete_record("itemset1", $condition);
+    
+    //$condition = array("id_process"=>$id_process);
+    $db_object->delete_record("itemset2", $condition);
+    
+    //$condition = array("id_process"=>$id_process);
+    $db_object->delete_record("itemset3", $condition);
+    
+    //$condition = array("id_process"=>$id_process);
+    $db_object->delete_record("confidence", $condition);
+}
+
 function is_exist_variasi_itemset($array_item1, $array_item2, $item1, $item2) {
     //$return = true;
     
