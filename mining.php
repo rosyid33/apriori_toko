@@ -104,12 +104,14 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     echo "<br><strong>Itemset 1:</strong><br>";
     echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
+                <th>No</th>
                 <th>Item</th>
                 <th>Jumlah</th>
                 <th>Suppport</th>
                 <th></th>
             </tr>";
     $itemset1 = $jumlahItemset1 = $supportItemset1 = $valueIn = array();
+    $x=1;
     foreach ($item_list as $key => $item) {
         $jumlah = jumlah_itemset1($dataTransaksi, $item);
         $support = ($jumlah/$jumlah_transaksi) * 100;
@@ -121,11 +123,13 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             $supportItemset1[] = $support;
         }
         echo "<tr>";
+        echo "<td>" . $x . "</td>";
         echo "<td>" . $item . "</td>";
         echo "<td>" . $jumlah . "</td>";
         echo "<td>" . price_format($support) . "</td>";
         echo "<td>" . (($lolos==1)?"Lolos":"Tidak Lolos") . "</td>";
         echo "</tr>";
+        $x++;
     }
     echo "</table>";
     //insert into itemset1 one query with many value
@@ -138,16 +142,20 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     echo "<br><strong>Itemset 1 yang lolos:</strong><br>";
     echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
+                <th>No</th>
                 <th>Item</th>
                 <th>Jumlah</th>
                 <th>Suppport</th>
             </tr>";
+    $x=1;
     foreach ($itemset1 as $key => $value) {
         echo "<tr>";
+        echo "<td>" . $x . "</td>";
         echo "<td>" . $value . "</td>";
         echo "<td>" . $jumlahItemset1[$key] . "</td>";
         echo "<td>" . price_format($supportItemset1[$key]) . "</td>";
         echo "</tr>";
+        $x++;
     }
     echo "</table>";
     
@@ -156,6 +164,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     echo "<br><strong>Itemset 2:</strong><br>";
     echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
+                <th>No</th>
                 <th>Item1</th>
                 <th>Item2</th>
                 <th>Jumlah</th>
@@ -191,12 +200,14 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                             $supportItemset2[] = $support2;
                         }
                         echo "<tr>";
+                        echo "<td>" . $no . "</td>";
                         echo "<td>" . $variance1 . "</td>";
                         echo "<td>" . $variance2 . "</td>";
                         echo "<td>" . $jml_itemset2 . "</td>";
                         echo "<td>" . price_format($support2) . "</td>";
                         echo "<td>" . (($lolos==1)?"Lolos":"Tidak Lolos") . "</td>";
                         echo "</tr>";
+                        $no++;
                     }
                 }
             }
@@ -215,18 +226,22 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     echo "<br><strong>Itemset 2 yang lolos:</strong><br>";
     echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
+                <th>No</th>
                 <th>Item 1</th>
                 <th>Item 2</th>
                 <th>Jumlah</th>
                 <th>Suppport</th>
             </tr>";
+    $no=1;
     foreach ($itemset2_var1 as $key => $value) {
         echo "<tr>";
+        echo "<td>" . $no . "</td>";
         echo "<td>" . $value . "</td>";
         echo "<td>" . $itemset2_var2[$key] . "</td>";
         echo "<td>" . $jumlahItemset2[$key] . "</td>";
         echo "<td>" . price_format($supportItemset2[$key]) . "</td>";
         echo "</tr>";
+        $no++;
     }
     echo "</table>";
     
@@ -234,6 +249,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     echo "<br><strong>Itemset 3:</strong><br>";
     echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
+                <th>No</th>
                 <th>Item1</th>
                 <th>Item2</th>
                 <th>Item3</th>
@@ -298,6 +314,7 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
                             }
                         
                             echo "<tr>";
+                            echo "<td>" . $no . "</td>";
                             echo "<td>" . $itemset1 . "</td>";
                             echo "<td>" . $itemset2 . "</td>";
                             echo "<td>" . $itemset3 . "</td>";
@@ -325,20 +342,24 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
     echo "<br><strong>Itemset 3 yang lolos:</strong><br>";
     echo "<table class='table table-bordered table-striped  table-hover'>
             <tr>
+                <th>No</th>
                 <th>Item 1</th>
                 <th>Item 2</th>
                 <th>Item 3</th>
                 <th>Jumlah</th>
                 <th>Suppport</th>
             </tr>";
+    $no=1;
     foreach ($itemset3_var1 as $key => $value) {
         echo "<tr>";
+        echo "<td>" . $no . "</td>";
         echo "<td>" . $value . "</td>";
         echo "<td>" . $itemset3_var2[$key] . "</td>";
         echo "<td>" . $itemset3_var3[$key] . "</td>";
         echo "<td>" . $jumlahItemset3[$key] . "</td>";
         echo "<td>" . price_format($supportItemset3[$key]) . "</td>";
         echo "</tr>";
+        $no++;
     }
     echo "</table>";
     

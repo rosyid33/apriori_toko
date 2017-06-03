@@ -73,6 +73,7 @@ $jumlah1=$db_object->db_num_rows($query1);
             
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
+                <th>No</th>
                 <th>X => Y</th>
                 <th>Support X U Y</th>
                 <th>Support X </th>
@@ -91,6 +92,7 @@ $jumlah1=$db_object->db_num_rows($query1);
                         echo "Confidence dari itemset 3";
                     }
                             echo "<tr>";
+                            echo "<td>".$no."</td>";
                             echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
                             echo "<td>".price_format($row['support_xUy'])."</td>";
                             echo "<td>".price_format($row['support_x'])."</td>";
@@ -110,6 +112,7 @@ $jumlah1=$db_object->db_num_rows($query1);
             Confidence dari itemset 2
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
+                <th>No</th>
                 <th>X => Y</th>
                 <th>Support X U Y</th>
                 <th>Support X </th>
@@ -120,6 +123,7 @@ $jumlah1=$db_object->db_num_rows($query1);
                     $no=1;
                     while($row=$db_object->db_fetch_array($query1)){
                             echo "<tr>";
+                            echo "<td>".$no."</td>";
                             echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
                             echo "<td>".price_format($row['support_xUy'])."</td>";
                             echo "<td>".price_format($row['support_x'])."</td>";
@@ -210,19 +214,23 @@ $jumlah1=$db_object->db_num_rows($query1);
             <strong>Itemset 1:</strong></br>
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
+                <th>No</th>
                 <th>Item 1</th>
                 <th>Jumlah</th>
                 <th>Support</th>
                 <th></th>
                 </tr>
                 <?php
+                $no=1;
                     while($row1=$db_object->db_fetch_array($query1)){
                             echo "<tr>";
+                            echo "<td>".$no."</td>";
                             echo "<td>".$row1['atribut']."</td>";
                             echo "<td>".$row1['jumlah']."</td>";
                             echo "<td>".price_format($row1['support'])."</td>";
                             echo "<td>".($row1['lolos']==1?"Lolos":"Tidak Lolos")."</td>";
                         echo "</tr>";
+                        $no++;
                         if($row1['lolos']==1){
                             $itemset1[] = $row1['atribut'];//item yg lolos itemset1
                             $jumlahItemset1[] = $row1['jumlah'];
@@ -236,16 +244,20 @@ $jumlah1=$db_object->db_num_rows($query1);
             echo "<br><strong>Itemset 1 yang lolos:</strong><br>";
             echo "<table class='table table-bordered table-striped  table-hover'>
                     <tr>
+                        <th>No</th>
                         <th>Item</th>
                         <th>Jumlah</th>
                         <th>Suppport</th>
                     </tr>";
+            $no=1;
             foreach ($itemset1 as $key => $value) {
                 echo "<tr>";
+                echo "<td>" . $no . "</td>";
                 echo "<td>" . $value . "</td>";
                 echo "<td>" . $jumlahItemset1[$key] . "</td>";
                 echo "<td>" . $supportItemset1[$key] . "</td>";
                 echo "</tr>";
+                $no++;
             }
             echo "</table>";
             ?>
@@ -267,6 +279,7 @@ $jumlah1=$db_object->db_num_rows($query1);
             <strong>Itemset 2:</strong></br>
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
+                <th>No</th>
                 <th>Item 1</th>
                 <th>Item 2</th>
                 <th>Jumlah</th>
@@ -274,22 +287,25 @@ $jumlah1=$db_object->db_num_rows($query1);
                 <th></th>
                 </tr>
                 <?php
-                    while($row2=$db_object->db_fetch_array($query2)){
-                            echo "<tr>";
-                            echo "<td>".$row2['atribut1']."</td>";
-                            echo "<td>".$row2['atribut2']."</td>";
-                            echo "<td>".$row2['jumlah']."</td>";
-                            echo "<td>".price_format($row2['support'])."</td>";
-                            echo "<td>".($row2['lolos']==1?"Lolos":"Tidak Lolos")."</td>";
-                        echo "</tr>";
-                        if($row2['lolos']==1){
-                            $itemset2_var1[] = $row2['atribut1'];
-                            $itemset2_var2[] = $row2['atribut2'];
-                            $jumlahItemset2[] = $row2['jumlah'];
-                            $supportItemset2[] = price_format($row2['support']);
-                        }
+                $no=1;
+                while($row2=$db_object->db_fetch_array($query2)){
+                        echo "<tr>";
+                        echo "<td>".$no."</td>";
+                        echo "<td>".$row2['atribut1']."</td>";
+                        echo "<td>".$row2['atribut2']."</td>";
+                        echo "<td>".$row2['jumlah']."</td>";
+                        echo "<td>".price_format($row2['support'])."</td>";
+                        echo "<td>".($row2['lolos']==1?"Lolos":"Tidak Lolos")."</td>";
+                    echo "</tr>";
+                    $no++;
+                    if($row2['lolos']==1){
+                        $itemset2_var1[] = $row2['atribut1'];
+                        $itemset2_var2[] = $row2['atribut2'];
+                        $jumlahItemset2[] = $row2['jumlah'];
+                        $supportItemset2[] = price_format($row2['support']);
                     }
-                    ?>
+                }
+                ?>
             </table>
             
             <?php
@@ -297,18 +313,22 @@ $jumlah1=$db_object->db_num_rows($query1);
             echo "<br><strong>Itemset 2 yang lolos:</strong><br>";
             echo "<table class='table table-bordered table-striped  table-hover'>
                     <tr>
+                        <th>No</th>
                         <th>Item 1</th>
                         <th>Item 2</th>
                         <th>Jumlah</th>
                         <th>Suppport</th>
                     </tr>";
+            $no=1;
             foreach ($itemset2_var1 as $key => $value) {
                 echo "<tr>";
+                echo "<td>" . $no . "</td>";
                 echo "<td>" . $value . "</td>";
                 echo "<td>" . $itemset2_var2[$key] . "</td>";
                 echo "<td>" . $jumlahItemset2[$key] . "</td>";
                 echo "<td>" . $supportItemset2[$key] . "</td>";
                 echo "</tr>";
+                $no++;
             }
             echo "</table>";
             ?>
@@ -329,6 +349,7 @@ $jumlah1=$db_object->db_num_rows($query1);
             <strong>Itemset 3:</strong></br>
             <table class='table table-bordered table-striped  table-hover'>
                 <tr>
+                <th>No</th>
                 <th>Item 1</th>
                 <th>Item 2</th>
                 <th>Item 3</th>
@@ -337,8 +358,10 @@ $jumlah1=$db_object->db_num_rows($query1);
                 <th></th>
                 </tr>
                 <?php
+                $no=1;
                     while($row3=$db_object->db_fetch_array($query3)){
                             echo "<tr>";
+                            echo "<td>".$no."</td>";
                             echo "<td>".$row3['atribut1']."</td>";
                             echo "<td>".$row3['atribut2']."</td>";
                             echo "<td>".$row3['atribut3']."</td>";
@@ -346,6 +369,7 @@ $jumlah1=$db_object->db_num_rows($query1);
                             echo "<td>".price_format($row3['support'])."</td>";
                             echo "<td>".($row3['lolos']==1?"Lolos":"Tidak Lolos")."</td>";
                         echo "</tr>";
+                        $no++;
                         if($row3['lolos']==1){
                             $itemset3_var1[] = $row3['atribut1'];
                             $itemset3_var2[] = $row3['atribut2'];
@@ -362,20 +386,24 @@ $jumlah1=$db_object->db_num_rows($query1);
             echo "<br><strong>Itemset 3 yang lolos:</strong><br>";
             echo "<table class='table table-bordered table-striped  table-hover'>
                     <tr>
+                        <th>No</th>
                         <th>Item 1</th>
                         <th>Item 2</th>
                         <th>Item 3</th>
                         <th>Jumlah</th>
                         <th>Suppport</th>
                     </tr>";
+            $no=1;
             foreach ($itemset3_var1 as $key => $value) {
                 echo "<tr>";
+                echo "<td>" . $no . "</td>";
                 echo "<td>" . $value . "</td>";
                 echo "<td>" . $itemset3_var2[$key] . "</td>";
                 echo "<td>" . $itemset3_var3[$key] . "</td>";
                 echo "<td>" . $jumlahItemset3[$key] . "</td>";
                 echo "<td>" . $supportItemset3[$key] . "</td>";
                 echo "</tr>";
+                $no++;
             }
             echo "</table>";
             ?>

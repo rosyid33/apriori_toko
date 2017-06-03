@@ -103,6 +103,7 @@ function display_process_hasil_mining($db_object, $id_process) {
     Confidence dari itemset 3
     <table class='table table-bordered table-striped  table-hover'>
         <tr>
+        <th>No</th>
         <th>X => Y</th>
         <th>Support X U Y</th>
         <th>Support X </th>
@@ -114,6 +115,7 @@ function display_process_hasil_mining($db_object, $id_process) {
             $data_confidence = array();
             while($row=$db_object->db_fetch_array($query1)){
                     echo "<tr>";
+                    echo "<td>".$no."</td>";
                     echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
                     echo "<td>".price_format($row['support_xUy'])."</td>";
                     echo "<td>".price_format($row['support_x'])."</td>";
@@ -140,6 +142,7 @@ function display_process_hasil_mining($db_object, $id_process) {
     Confidence dari itemset 2
     <table class='table table-bordered table-striped  table-hover'>
         <tr>
+        <th>No</th>
         <th>X => Y</th>
         <th>Support X U Y</th>
         <th>Support X </th>
@@ -151,6 +154,7 @@ function display_process_hasil_mining($db_object, $id_process) {
             $data_confidence = array();
             while($row=$db_object->db_fetch_array($query1)){
                     echo "<tr>";
+                    echo "<td>".$no."</td>";
                     echo "<td>".$row['kombinasi1']." => ".$row['kombinasi2']."</td>";
                     echo "<td>".price_format($row['support_xUy'])."</td>";
                     echo "<td>".price_format($row['support_x'])."</td>";
