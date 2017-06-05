@@ -151,7 +151,7 @@ function display_process_hasil_mining($db_object, $id_process) {
         </tr>
         <?php
             $no=1;
-            $data_confidence = array();
+            //$data_confidence = array();
             while($row=$db_object->db_fetch_array($query1)){
                     echo "<tr>";
                     echo "<td>".$no."</td>";

@@ -58,6 +58,75 @@ if (isset($_POST['submit'])) {
                     $start = format_date($tgl[0]);
                     $end = format_date($tgl[1]);
                     
+                    if(isset($_POST['id_process'])){
+                        $id_process = $_POST['id_process'];
+                        //delete hitungan untuk id_process
+                        reset_hitungan($db_object, $id_process);
+                        
+                        //update log process
+                        $field = array(
+                                        "start_date"=>$start,
+                                        "end_date"=>$end,
+                                        "min_support"=>$_POST['min_support'],
+                                        "min_confidence"=>$_POST['min_confidence']
+                                    );
+                        $where = array(
+                                        "id"=>$id_process
+                                    );
+                        $query = $db_object->update_record("process_log", $field, $where);
+                    }
+                    else{
+                        //insert log process
+                        $field_value = array(
+                                        "start_date"=>$start,
+                                        "end_date"=>$end,
+                                        "min_support"=>$_POST['min_support'],
+                                        "min_confidence"=>$_POST['min_confidence']
+                                    );
+                        $query = $db_object->insert_record("process_log", $field_value);
+                        $id_process = $db_object->db_insert_id();
+                    }
+                    //show form for update
+                    ?>
+                    <form method="post" action="">
+                        <div class="row">
+                            <div class="col-lg-6 " >
+                                <div class="form-group">
+                                    <label>Min Support: </label>
+                                    <input name="min_support" type="text" 
+                                           value="<?php echo $_POST['min_support']; ?>"
+                                           class="form-control" placeholder="Min Support">
+                                </div>
+                                <div class="form-group">
+                                    <label>Min Confidence: </label>
+                                    <input name="min_confidence" type="text"
+                                           value="<?php echo $_POST['min_confidence']; ?>"
+                                           class="form-control" placeholder="Min Confidence">
+                                </div>
+                                <input type="hidden" name="id_process" value="<?php echo $id_process; ?>">
+                                <div class="form-group">
+                                    <input name="submit" type="submit" value="Proses" class="btn btn-success">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 " >
+                                <!-- Date range -->
+                                <div class="form-group">
+                                    <label>Tanggal: </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" class="form-control pull-right" name="range_tanggal"
+                                               id="reservation" required="" placeholder="Date range" 
+                                               value="<?php echo $_POST['range_tanggal']; ?>">
+                                    </div><!-- /.input group -->
+                                </div><!-- /.form group -->
+                            </div>
+                        </div>
+                    </form>
+                    <?php
+                    
+                    
                     echo "Min Support Absolut: " . $_POST['min_support'];
                     echo "<br>";
                     $sql = "SELECT COUNT(*) FROM transaksi 
@@ -122,15 +191,6 @@ if (isset($_POST['submit'])) {
                     echo "aaa";
                     */
                     
-                    //insert log process
-                    $field_value = array(
-                                    "start_date"=>$start,
-                                    "end_date"=>$end,
-                                    "min_support"=>$_POST['min_support'],
-                                    "min_confidence"=>$_POST['min_confidence']
-                                );
-                    $query = $db_object->insert_record("process_log", $field_value);
-                    $id_process = $db_object->db_insert_id();
 
                     $result = mining_process($db_object, $_POST['min_support'], $_POST['min_confidence'],
                             $start, $end, $id_process);
