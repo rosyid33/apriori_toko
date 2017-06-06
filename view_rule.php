@@ -151,46 +151,6 @@ $row_log = $db_object->db_fetch_array($res_log);
 //            }
 //            else{
             ?>
-            <form method="post" action="">
-                <div class="row">
-                    <div class="col-lg-6 " >
-                        <div class="form-group">
-                            <label>Min Support: </label>
-                            <input name="min_support" type="text" 
-                                   value="<?php echo $row_log['min_support']; ?>"
-                                   class="form-control" placeholder="Min Support">
-                        </div>
-                        <div class="form-group">
-                            <label>Min Confidence: </label>
-                            <input name="min_confidence" type="text"
-                                   value="<?php echo $row_log['min_confidence']; ?>"
-                                   class="form-control" placeholder="Min Confidence">
-                        </div>
-                        <input type="hidden" name="id_process" value="<?php echo $id_process; ?>">
-                        <div class="form-group">
-                            <input name="submit" type="submit" value="Proses" class="btn btn-success">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 " >
-                        <!-- Date range -->
-                        <div class="form-group">
-                            <label>Tanggal: </label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" class="form-control pull-right" name="range_tanggal"
-                                       id="reservation" required="" placeholder="Date range" 
-                                       value="<?php echo format_date2($row_log['start_date'])
-                                       ." - ".format_date2($row_log['end_date']); ?>">
-                            </div><!-- /.input group -->
-                        </div><!-- /.form group -->
-<!--                        <div class="form-group">
-                            <input name="search_display" type="submit" value="Search" class="btn btn-default">
-                        </div>-->
-                    </div>
-                </div>
-            </form>
             
             <?php
             echo "Confidence dari itemset 3";
