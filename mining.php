@@ -77,7 +77,6 @@ function is_exist_variasi_itemset($array_item1, $array_item2, $item1, $item2) {
 function mining_process($db_object, $min_support, $min_confidence, $start_date, $end_date, $id_process){
     //remove reset truncate (change to log mode)
     //reset_temporary($db_object);
-
     //get  transaksi data to array variable
     $sql_trans = "SELECT * FROM transaksi 
             WHERE transaction_date BETWEEN '$start_date' AND '$end_date' ";
@@ -397,25 +396,26 @@ function mining_process($db_object, $min_support, $min_confidence, $start_date, 
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
                     $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi);
             
-            //1,3 => 2
-            hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut3, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
-            
             //2,3 => 1
             hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
                     $atribut2, $atribut3, $atribut1, $id_process, $dataTransaksi, $jumlah_transaksi);
             
-            //1 => 2,3
+            //3,1 => 2
+            hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence, 
+                    $atribut3, $atribut1, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
+            
+            
+            //1 => 3,2
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence, 
-                    $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi);
+                    $atribut1, $atribut3, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
             
             //2 => 1,3
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
                     $atribut2, $atribut1, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi);
             
-            //3 => 1,2
+            //3 => 2,1
             hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
-                    $atribut3, $atribut1, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi);
+                    $atribut3, $atribut2, $atribut1, $id_process, $dataTransaksi, $jumlah_transaksi);
             
         }
     }
@@ -583,15 +583,19 @@ function get_count_itemset3($db_object, $atribut1, $atribut2, $atribut3, $start_
 function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
         $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi){
     
-    $sql1_ = "SELECT support FROM itemset2 "
-            . " WHERE atribut1 = '".$atribut1."' "
-            . " AND atribut2 = '".$atribut2."' "
-            . " AND id_process = ".$id_process;
-    $res1_ = $db_object->db_query($sql1_);
-    while($row1_ = $db_object->db_fetch_array($res1_)){
+//    $sql1_ = "SELECT support FROM itemset2 "
+//            . " WHERE atribut1 = '".$atribut1."' "
+//            . " AND atribut2 = '".$atribut2."' "
+//            . " AND id_process = ".$id_process;
+//    $res1_ = $db_object->db_query($sql1_);
+//    while($row1_ = $db_object->db_fetch_array($res1_)){
+    //hitung nilai support $nilai_support_x seperti di itemset2
+    $jml_itemset2 = jumlah_itemset2($dataTransaksi, $atribut1, $atribut2);
+    $nilai_support_x = ($jml_itemset2/$jumlah_transaksi) * 100;
+    
         $kombinasi1 = $atribut1." , ".$atribut2;
         $kombinasi2 = $atribut3;
-        $supp_x = $row1_['support'];
+        $supp_x = $nilai_support_x;//$row1_['support'];
         $conf = ($supp_xuy/$supp_x)*100;
         //lolos seleksi min confidence itemset3
         $lolos = ($conf >= $min_confidence)? 1:0;
@@ -631,7 +635,7 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
                     "pxuy" => $PAUB,
                     "from_itemset"=>3
                 ));
-    }
+//    }
 }
 
 
@@ -648,14 +652,18 @@ function hitung_confidence($db_object, $supp_xuy, $min_support, $min_confidence,
 function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence,
         $atribut1, $atribut2, $atribut3, $id_process, $dataTransaksi, $jumlah_transaksi){
     
-        $sql4_ = "SELECT support FROM itemset1 "
-                . " WHERE atribut = '".$atribut1."' "
-                . " AND id_process = ".$id_process;
-        $res4_ = $db_object->db_query($sql4_);
-        while($row4_ = $db_object->db_fetch_array($res4_)){
+//        $sql4_ = "SELECT support FROM itemset1 "
+//                . " WHERE atribut = '".$atribut1."' "
+//                . " AND id_process = ".$id_process;
+//        $res4_ = $db_object->db_query($sql4_);
+//        while($row4_ = $db_object->db_fetch_array($res4_)){
+        //hitung nilai support seperti itemset1
+    $jml_itemset1 = jumlah_itemset1($dataTransaksi, $atribut1);
+    $nilai_support_x = ($jml_itemset1/$jumlah_transaksi) * 100;
+    
             $kombinasi1 = $atribut1;
             $kombinasi2 = $atribut2." , ".$atribut3;
-            $supp_x = $row4_['support'];
+            $supp_x = $nilai_support_x;//$row4_['support'];
             $conf = ($supp_xuy/$supp_x)*100;
             //lolos seleksi min confidence itemset3
             $lolos = ($conf >= $min_confidence)? 1:0;
@@ -695,20 +703,24 @@ function hitung_confidence1($db_object, $supp_xuy, $min_support, $min_confidence
                         "pxuy" => $PAUB,
                         "from_itemset"=>3
                     ));
-        }
+//        }
 }
 
 
 function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence,
         $atribut1, $atribut2, $id_process, $dataTransaksi, $jumlah_transaksi){
     
-        $sql1_ = "SELECT support FROM itemset1 "
-                    . " WHERE atribut = '".$atribut1."' AND id_process = ".$id_process;
-        $res1_ = $db_object->db_query($sql1_);
-        while($row1_ = $db_object->db_fetch_array($res1_)){
+//        $sql1_ = "SELECT support FROM itemset1 "
+//                    . " WHERE atribut = '".$atribut1."' AND id_process = ".$id_process;
+//        $res1_ = $db_object->db_query($sql1_);
+//        while($row1_ = $db_object->db_fetch_array($res1_)){
+        //hitung nilai support seperti itemset1
+        $jml_itemset1 = jumlah_itemset1($dataTransaksi, $atribut1);
+        $nilai_support_x = ($jml_itemset1/$jumlah_transaksi) * 100;
+    
             $kombinasi1 = $atribut1;
             $kombinasi2 = $atribut2;
-            $supp_x = $row1_['support'];
+            $supp_x = $nilai_support_x;//$row1_['support'];
             $conf = ($supp_xuy/$supp_x)*100;
             //lolos seleksi min confidence itemset3
             $lolos = ($conf >= $min_confidence)? 1:0;
@@ -747,15 +759,16 @@ function hitung_confidence2($db_object, $supp_xuy, $min_support, $min_confidence
                         "pxuy" => $PAUB,
                         "from_itemset"=>2
                     ));
-        }
+//        }
 }
 
 
 function jumlah_itemset1($transaksi_list, $produk){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
-        $items = strtoupper($data['produk']);
-        $pos = strpos($items, strtoupper($produk).",");
+        $items = ",".strtoupper($data['produk']);
+        $item_cocok = ",".strtoupper($produk).",";
+        $pos = strpos($items, $item_cocok);
         if($pos!==false){//was found at position $pos
             $count++;
         }
@@ -766,9 +779,9 @@ function jumlah_itemset1($transaksi_list, $produk){
 function jumlah_itemset2($transaksi_list, $variasi1, $variasi2){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
-        $items = strtoupper($data['produk']);
-        $item_variasi1 = strtoupper($variasi1).",";
-        $item_variasi2 = strtoupper($variasi2).",";
+        $items = ",".strtoupper($data['produk']);
+        $item_variasi1 = ",".strtoupper($variasi1).",";
+        $item_variasi2 = ",".strtoupper($variasi2).",";
         
         $pos1 = strpos($items, $item_variasi1);
         $pos2 = strpos($items, $item_variasi2);
@@ -782,10 +795,14 @@ function jumlah_itemset2($transaksi_list, $variasi1, $variasi2){
 function jumlah_itemset3($transaksi_list, $variasi1, $variasi2, $variasi3){
     $count = 0;
     foreach ($transaksi_list as $key => $data) {
-        $items = strtoupper($data['produk']);
-        $pos1 = strpos($items, strtoupper($variasi1).",");
-        $pos2 = strpos($items, strtoupper($variasi2).",");
-        $pos3 = strpos($items, strtoupper($variasi3).",");
+        $items = ",".strtoupper($data['produk']);
+        $item_variasi1 = ",".strtoupper($variasi1).",";
+        $item_variasi2 = ",".strtoupper($variasi2).",";
+        $item_variasi3 = ",".strtoupper($variasi3).",";
+        
+        $pos1 = strpos($items, $item_variasi1);
+        $pos2 = strpos($items, $item_variasi2);
+        $pos3 = strpos($items, $item_variasi3);
         if($pos1!==false && $pos2!==false && $pos3!==false){//was found at position $pos
             $count++;
         }

@@ -56,6 +56,16 @@ if(isset($_POST['submit'])){
                     // $produkIn = get_produk_to_in($temp_produk);
                     $temp_date = format_date($value[1]);
                     $produkIn = $value[2];
+                    
+                    //mencegah ada jarak spasi
+                    $produkIn = str_replace(" ,", ",", $produkIn);
+                    $produkIn = str_replace("  ,", ",", $produkIn);
+                    $produkIn = str_replace("   ,", ",", $produkIn);
+                    $produkIn = str_replace("    ,", ",", $produkIn);
+                    $produkIn = str_replace(", ", ",", $produkIn);
+                    $produkIn = str_replace(",  ", ",", $produkIn);
+                    $produkIn = str_replace(",   ", ",", $produkIn);
+                    $produkIn = str_replace(",    ", ",", $produkIn);
                     //$item1 = explode(",", $produkIn);
                     
                     

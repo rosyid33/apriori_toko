@@ -118,7 +118,7 @@ $sql = "SELECT
         WHERE conf.id_process = '$id_process' "
         . " AND conf.id_process = log.id "
         . " AND conf.from_itemset=3 "
-        . " ORDER BY conf.lolos DESC";
+        ;//. " ORDER BY conf.lolos DESC";
 //        echo $sql;
 $query=$db_object->db_query($sql);
 $jumlah=$db_object->db_num_rows($query);
@@ -131,7 +131,7 @@ $sql1 = "SELECT
         WHERE conf.id_process = '$id_process' "
         . " AND conf.id_process = log.id "
         . " AND conf.from_itemset=2 "
-        . " ORDER BY conf.lolos DESC";
+        ;//. " ORDER BY conf.lolos DESC";
 //        echo $sql;
 $query1=$db_object->db_query($sql1);
 $jumlah1=$db_object->db_num_rows($query1);

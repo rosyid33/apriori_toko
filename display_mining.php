@@ -97,7 +97,7 @@ function display_process_hasil_mining($db_object, $id_process) {
     $sql1 = "SELECT * FROM confidence "
                 . " WHERE id_process = ".$id_process
                 . " AND from_itemset=3 "
-                . " ORDER BY lolos DESC";
+                ;//. " ORDER BY lolos DESC";
     $query1 = $db_object->db_query($sql1);
     ?>
     Confidence dari itemset 3
@@ -136,7 +136,7 @@ function display_process_hasil_mining($db_object, $id_process) {
     $sql1 = "SELECT * FROM confidence "
                 . " WHERE id_process = ".$id_process
                 . " AND from_itemset=2 "
-                . " ORDER BY lolos DESC";
+                ;//. " ORDER BY lolos DESC";
     $query1 = $db_object->db_query($sql1);
     ?>
     Confidence dari itemset 2
